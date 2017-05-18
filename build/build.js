@@ -7,7 +7,8 @@ var path = require('path')
 var config = require('../config')
 var ora = require('ora')
 var webpack = require('webpack')
-var webpackConfig = require('./webpack.prod.conf')
+// var webpackConfig = require('./webpack.prod.conf')
+var webpackConfig = require('./webpack.server.conf.js')
 
 console.log(
   '  Tip:\n' +

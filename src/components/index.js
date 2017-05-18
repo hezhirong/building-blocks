@@ -1,8 +1,8 @@
-import draggable from 'vuedraggable'
+import component from './component/'
 
 
 const components = {
-    draggable
+    component
 };
 
 const install = Vue => {

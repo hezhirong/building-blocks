@@ -25,6 +25,11 @@ var webpackConfig = merge(baseWebpackConfig, {
     })
   },
   plugins: [
+    new webpack.ProvidePlugin({
+        $:"jquery",
+        jQuery:"jquery",
+        "window.jQuery":"jquery"
+    }),
     // http://vuejs.github.io/vue-loader/en/workflow/production.html
     new webpack.DefinePlugin({
       'process.env': env
@@ -42,7 +47,7 @@ var webpackConfig = merge(baseWebpackConfig, {
     // see https://github.com/ampedandwired/html-webpack-plugin
     new HtmlWebpackPlugin({
       filename: config.build.index,
-      template: './src/client/index.html',
+      template: './src/index.html',
       inject: true,
       minify: {
         removeComments: true,

@@ -29,6 +29,11 @@ module.exports = merge(baseWebpackConfig, {
   // eval-source-map is faster for development
   devtool: '#eval-source-map',
   plugins: [
+    new webpack.ProvidePlugin({
+        $:"jquery",
+        jQuery:"jquery",
+        "window.jQuery":"jquery"
+    }),
     new webpack.DefinePlugin({
       'process.env': config.dev.env
     }),
@@ -40,7 +45,14 @@ module.exports = merge(baseWebpackConfig, {
     // https://github.com/ampedandwired/html-webpack-plugin
     new HtmlWebpackPlugin({
       filename: 'index.html',
-      template: './src/client/index.html',
+      template: './src/index.html',
+      chunks: ['app'],
+      inject: true
+    }),
+    new HtmlWebpackPlugin({
+      filename: 'preview.html',
+      template: './src/preview.html',
+      chunks: ['preview'],
       inject: true
     })
   ]

@@ -1,0 +1,38 @@
+html, body, #app {
+	height: 100%;
+	margin: 0;
+	padding: 0;
+}
+* {
+	box-sizing: border-box;
+}
+.h100p {
+	height: 100%;
+}
+.w100p {
+	width: 100%;
+}
+.sys-name {
+	position: absolute;
+	width: 200px;
+	line-height: 60px;
+    padding-left: 60px;
+	background: #464c5b url('../images/logo.png') left center no-repeat;
+	background-size: contain;
+    background-size: contain;
+    color: #ffffff;
+    border-right: 1px solid #333333;
+    z-index: 1;
+}
+.header-nav {
+	margin-left: 200px;
+}
+
+
+// 重置样式
+.ivu-icon {
+	margin-right: 10px;
+}
+.ivu-collapse>.ivu-collapse-item>.ivu-collapse-header {
+	padding-left: 20px;
+}
