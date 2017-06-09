@@ -46,14 +46,14 @@ module.exports = merge(baseWebpackConfig, {
     new HtmlWebpackPlugin({
       filename: 'index.html',
       template: './src/index.html',
-      chunks: ['app'],
+      // chunks: ['app'],
       inject: true
     }),
-    new HtmlWebpackPlugin({
-      filename: 'preview.html',
-      template: './src/preview.html',
-      chunks: ['preview'],
-      inject: true
-    })
+    // new HtmlWebpackPlugin({
+    //   filename: 'preview.html',
+    //   template: './src/preview.html',
+    //   chunks: ['preview'],
+    //   inject: true
+    // })
   ]
 })

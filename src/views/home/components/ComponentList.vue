@@ -1,13 +1,12 @@
 <template>
 	<div>
-		<Collapse>
-			 <Panel>
-	            组件一
-	            <div slot="content">
-	            	<div v-dragable="element" v-for="(element, index) in list" :key="index">{{element.name}}</div>
-	            </div>
-	        </Panel>
-	    </Collapse>
+		<el-collapse>
+  			<el-collapse-item title="组件一" name="index">
+  				<div v-dragable v-for="(element, index) in list"> 
+  					{{element.name}}
+  				</div>
+  			</el-collapse-item>
+  		</el-collapse>
 	</div>
 </template>
 <script>

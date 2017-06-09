@@ -1,18 +1,18 @@
 const env = process.env.NODE_ENV;
 
 const fs = require('fs');
-const config = require('../../config/project');
+const config = require('../config/project');
 const path = require('path');
 const Koa = require('koa');
-const router = require('koa-router')();
-
+const mongoose = require("mongoose")
 const app = new Koa();
 
 // support socket.io
 const server = require('http').Server(app.callback());
 const io = require('socket.io')(server);
 
-const isProd = process.env.NODE_ENV === 'production'
+mongoose.Promise = Promise;
+mongoose.connect('mongodb://localhost/building-blocks');
 
 io.set('heartbeat interval', 60000);
 io.set('heartbeat timeout', 5000);
@@ -24,7 +24,6 @@ fs.readdir(`${__dirname}/api`, (err, files) => {
     if (err) {
         return false;
     }
-    console.log(files)
     for (const file of files) {
         if (file !== 'index.js') {
             // 动态导入接口
@@ -45,40 +44,6 @@ if (env !== 'test') {
 }
 
 
-
-router.get('/index', async (ctx, next) => {
-    // /js/app.js
-    // var layout = fs.readFileSync('../client/index.html', 'utf8')
-
-    // await require('vue-server-renderer').renderToString(
-    //     // 创建一个应用实例
-    //     require('/js/app')(),
-
-    //     // 处理渲染结果
-    //     function(error, html){
-    //         if(error){
-    //             console.error(error);
-    //             return res
-    //                 .status(500)
-    //                 .send('Server Error')
-    //         }
-    //         // 发送布局和HTML文件
-    //         res.send(layout.replace('<div id="app"></div>', html))
-
-    //     }
-    // )
-    require('vue-server-renderer').renderToString(
-
-        )
-
-    ctx.body = '<h1>hello</h1>'
-})
-
-app
-  .use(router.routes())
-  .use(router.allowedMethods());
-
-
 // error handle
 app.use(async (ctx, next) => {
     // const start = new Date();
@@ -92,10 +57,12 @@ app.use(async (ctx, next) => {
     // const ms = new Date() - start;
     // console.log(`${ctx.method} ${ctx.url} - ${ms}ms`);
 });
-
+// 读取组件信息
+var componentsData = require('./read-component.js')()
 // socket handle
 io.on('connection', socket => {
-    console.log('new connection');
+    // 发送组件信息到客户端
+    socket.emit('message', componentsData);
 
     socket.on('message', (data, cb) => {
         apiModel.handle(io, socket, data, cb);

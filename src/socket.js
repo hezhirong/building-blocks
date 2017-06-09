@@ -1,4 +1,4 @@
-import config from '../../config/project';
+import config from '../config/project';
 
 let socketClient = require('socket.io-client');
 let platformSocketParam = { };
@@ -11,7 +11,7 @@ function createInterface(method) {
         return new Promise( (resolve, reject) => {
             this.emit('message', { method: method, path: path, data: data }, res => {
                 console.log(res)
-                if (res.status === 'success') {
+                if (res.status == 200) {
                     resolve(res)
                 } else {
                     reject(res)

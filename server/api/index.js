@@ -23,7 +23,7 @@ const apiEntry = {
         const success = (data) => {
             end(200, data);
         };
-        const error = (data, msg) => {
+        const error = (msg, data) => {
             end(400, data, msg);
         };
         console.log(`<----- 【${path}】`);

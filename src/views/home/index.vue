@@ -1,6 +1,6 @@
 <template>
-	<div class="body">
-		<header-menu></header-menu>
+	<div class="body" v-loading="pageLoading">
+		<header-menu  @change="menuClick"></header-menu>
 		<section class="content">
 			<div class="components-box">
 				<component-list></component-list>
@@ -15,14 +15,12 @@
 	</div>
 </template>
 <script>
-	import HeaderMenu from './components/HeaderMenu.vue'
-	import ComponentList from './components/ComponentList.vue'
-	import ComponentProp from './components/ComponentProp.vue'
-	import PreviewPage from './components/PreviewPage.vue'
+
 	export default {
 		data() {
 			return {
-				
+				pageLoading: false,
+				previewData: null,
 			   	list2: [{
 				      name: "Juan"
 				    }, {
@@ -34,11 +32,18 @@
 				list4: []
 			}
 		},
-		components: {
-			HeaderMenu,
-			ComponentList,
-			ComponentProp,
-			PreviewPage
+		methods: {
+			menuClick(type, projectData) {
+				switch(type) {
+					case "createProject":
+						this.pageLoading = true;
+						this.socket.get('/new_project', projectData).then( res => {
+							this.previewData = res;
+							this.pageLoading = false;
+						}).catch( res => this.pageLoading = false )
+						break;
+				}
+			}
 		}
 	}
 </script>

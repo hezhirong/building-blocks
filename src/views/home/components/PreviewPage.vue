@@ -1,7 +1,7 @@
 <template>
 	<div class="w100p h100p wrapper">
 		<div class="content" :style="contentStyle">
-			<iframe src="/preview.html" border="0" style="width: 100%; height: 100%; border: none"></iframe>
+			<!-- <iframe src="/preview.html" border="0" style="width: 100%; height: 100%; border: none"></iframe> -->
 		</div>
 	</div>
 </template>
