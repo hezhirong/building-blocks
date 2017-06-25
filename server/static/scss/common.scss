@@ -1,0 +1,14 @@
+body, html, #app {
+	height: 100%;
+	margin: 0;
+	padding: 0;
+}
+#component-wrap {
+	min-height: 100%;
+}
+* {
+	box-sizing: border-box;
+}
+.selected-component {
+	border: 1px solid red;
+}

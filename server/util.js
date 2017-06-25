@@ -2,7 +2,7 @@ const fs = require('fs');
 const path = require('path')
 const util = {
 	componentsPath: './components',
-	projectPath: 'project',
+	projectPath: './project',
 	uId: 1,
 	uName: 'hezhirong',
 

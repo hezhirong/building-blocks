@@ -5,8 +5,13 @@ const config = require('../config/project');
 const path = require('path');
 const Koa = require('koa');
 const mongoose = require("mongoose")
-const app = new Koa();
+const koaStatic = require("koa-static");
+const Router = require('koa-router');
 
+const app = new Koa();
+const views = require('koa-views');
+const router = new Router();
+const swig = require("swig");
 // support socket.io
 const server = require('http').Server(app.callback());
 const io = require('socket.io')(server);
@@ -16,6 +21,13 @@ mongoose.connect('mongodb://localhost/building-blocks');
 
 io.set('heartbeat interval', 60000);
 io.set('heartbeat timeout', 5000);
+
+app.use(koaStatic(path.join(__dirname, 'static')));
+app.use(views(__dirname + '/static/pages', {
+    map: {
+        html: 'swig'
+    }
+}));
 
 // 加载api入口文件
 const apiModel = require('./api/index');
@@ -43,6 +55,29 @@ if (env !== 'test') {
     app.use(require('koa-logger')());
 }
 
+// router
+// index
+router.get('/', async (ctx, next) => {
+    await ctx.render('index', {
+    })
+});
+
+// preview
+router.get('/preview/:docId', async (ctx, next) => {
+    const Project = require('./modules/project.js');
+    let data = await Project.findById(ctx.params.docId);
+    await ctx.render('preview', {
+        data: {
+            projectName: data.projectName,
+            description: data.description,
+            renderData: data.renderData
+        }
+    })
+});
+
+app
+    .use(router.routes())
+    .use(router.allowedMethods());
 
 // error handle
 app.use(async (ctx, next) => {
@@ -62,7 +97,7 @@ var componentsData = require('./read-component.js')()
 // socket handle
 io.on('connection', socket => {
     // 发送组件信息到客户端
-    socket.emit('message', componentsData);
+    socket.emit('componentList', componentsData);
 
     socket.on('message', (data, cb) => {
         apiModel.handle(io, socket, data, cb);

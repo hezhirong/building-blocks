@@ -1,17 +1,7 @@
 module.exports = {
 	name: 'hello',
-	icon: 'xx.png',
+	icon: 'http://ico.58pic.com/iconset03/3dcartoon/gif/59488.gif',
 	entry: 'hello.vue',
 	tag: 'za-hello',
-	props: {
-		hello: {
-			default: 'hello',
-			type: 'input',
-			validate(v) {
-				if (v === '') {
-					throw new Error('不能为空');
-				}
-			}
-		}
-	}
+	group: 'common'
 }

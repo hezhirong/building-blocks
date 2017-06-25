@@ -3,8 +3,8 @@ const path = require('path');
 const util = require('../util');
 const fs = require('fs');
 const shell = require('shelljs')
-
-const indexHtml = () => `
+/*
+const indexHtml = (jsPath) => `
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -13,7 +13,7 @@ const indexHtml = () => `
 </head>
 <body>
 	<div id="app"></div>
-	<script src="./static/js/app.js"></script>
+	<script src="${jsPath}"></script>
 </body>
 </html>`;
 const appJs = componentsData => {
@@ -28,7 +28,7 @@ const appJs = componentsData => {
         let str = '';
         // TODO: 没实现当组件添加删除后的逻辑
         Object.keys(componentsData).forEach( tag => {
-            str += `Vue.component('${tag}', require('${componentsData[tag].componentPath}'))\n\r`
+            str += `Vue.renderComponent('${tag}', require('${componentsData[tag].componentPath}'))\n\r`
         });
         console.log(str)
         return str;
@@ -38,9 +38,7 @@ import babelpolyfill from 'babel-polyfill'
 import Vue from 'vue'
 import App from './views/preview/index.vue'
 import 'font-awesome/css/font-awesome.min.css'
-/* components */
 ${importComponent()}
-/* end components */
 new Vue({
   render: h => h(App)
 }).$mount('#app')`
@@ -76,36 +74,25 @@ const createProject = projectPath => {
         result: true
     }
 }
+*/
 
 const AuthApi = {
 	"GET /new_project": function (data) {
-		// 项目路径 project/{usename}/{projectDirName}
-		const projectPath = './' + path.join(util.projectPath, util.uName, data.dirName);
-        // shell.mkdir('-p', projectPath)
-        // shell.cd(projectPath)
-        // shell.echo(indexHtml()).to('index.html')
-        // shell.echo(appJs()).to('app.js')
-        //
-        //     return false;
-        let {result, msg} = createProject(projectPath);
-		if (!result) {
-			this.error(msg);
-            return false;
-		}
 		var project = new Project({
 			projectName: data.projectName,
+			title: data.title,
+            description: data.description,
 			userId: util.uId,
-			projectPath: projectPath,
-            componentsData: {},
+            requireComponents: [],
 			renderData: []
 		})
 		project.save().then( doc => {
-			this.success(doc)
+            this.success({
+            	id: doc._id
+			})
 		}).catch( e => {
 			// 保存失败删除目录
-            console.log(projectPath)
-			util.rmdir(projectPath);
-			this.error('创建目录失败2');
+			this.error('创建项目失败');
 		})
 	}
 }

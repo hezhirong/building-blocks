@@ -3,9 +3,10 @@ var mongoose = require("mongoose")
 
 var ProjectSchema = mongoose.Schema({
 	projectName: String,
+	title: String,
+    description: String,
 	userId: Number,
-	projectPath: String,
-    componentsData: Object,
+	requireComponents: Array,
 	renderData: Array,
 	meta: {
 		createAt: {
