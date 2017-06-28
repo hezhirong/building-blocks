@@ -1,6 +1,10 @@
 
 const controlRender = {
 		text: (h, data, listeners) => {
+			let child = [];
+			if (data.append) {
+				child = [h('template', { slot: 'append'} , [data.append] )];
+			}
 			return h('el-input', {
 				props: {
 					value: data[vName],
@@ -12,7 +16,7 @@ const controlRender = {
 						listeners.change(data);
 					}
 				}
-			})
+			}, child)
 		},
 		select: (h, data, listeners) => {
 			let options = Array.isArray(data.options) ? data.options : [];
@@ -40,6 +44,22 @@ const controlRender = {
 				}
 				return h('el-option', { props: {value: value, label: label} });
 			}))
+		},
+	 	color: (h, data, listeners) => {
+			return h('el-color-picker', {
+					props: {
+						'show-alpha': true,
+						value: data[vName],
+						placeholder: data.placeholder
+					},
+					on: {
+						input: function (event) {
+							data[vName] = event;
+							listeners.change(data);
+						}
+					}
+				}
+			)
 		},
 		switch: 'el-switch',
 		checkbox: 'el-checkbox',

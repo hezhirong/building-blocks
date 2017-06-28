@@ -4,7 +4,7 @@
                 border
                 :data="customProps.list"
                 style="width: 100%">
-            <el-table-column prop="title" label="name" width="100">
+            <el-table-column prop="label" label="name" width="100">
             </el-table-column>
             <el-table-column prop="value" label="value">
                 <template scope="scope">
