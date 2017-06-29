@@ -3,12 +3,37 @@ body, html, #app {
 	margin: 0;
 	padding: 0;
 }
-#component-wrap {
+#component-wrap, #rootComponent {
+	height: 100%;
 	min-height: 100%;
 }
 * {
 	box-sizing: border-box;
 }
+.remove {
+	position: absolute;
+	top: 0;
+	right: 0;
+	z-index: 1000;
+}
+.position-relative {
+	position: relative;
+}
 .selected-component {
 	border: 1px solid red;
+	//:after {
+	//	content: "Example";
+	//	position: absolute;
+	//	top: -1px;
+	//	left: -1px;
+	//	padding: 3px 7px;
+	//	font-size: 12px;
+	//	font-weight: bold;
+	//	background-color: #f5f5f5;
+	//	border: 1px solid #ddd;
+	//	color: #9da0a4;
+	//	-webkit-border-radius: 4px 0 4px 0;
+	//	-moz-border-radius: 4px 0 4px 0;
+	//	border-radius: 4px 0 4px 0;
+	//}
 }

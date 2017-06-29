@@ -5,7 +5,7 @@ export default {
         let props = ctx.props;
         if (props.source && props.source.length > 0) {
         	console.log('***** render *****', props.source)
-            return h('div', {}, props.source.map(component => {
+            return h('div', { attrs: {id: 'rootComponent'} }, props.source.map(component => {
                 return h(component.tag,
                     {
                         props: component.props,
@@ -20,7 +20,7 @@ export default {
                 );
             }));
         }
-        return h('div')
+        return h('div', { attrs: {id: 'rootComponent'}} )
         // return h('div', {}, [h('za-hello', {props: {hello: 'hello world'}})])
     }
 }

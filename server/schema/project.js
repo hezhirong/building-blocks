@@ -6,7 +6,6 @@ var ProjectSchema = mongoose.Schema({
 	title: String,
     description: String,
 	userId: Number,
-	requireComponents: Array,
 	renderData: Array,
 	meta: {
 		createAt: {

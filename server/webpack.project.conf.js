@@ -1,3 +1,5 @@
+var ExtractTextPlugin = require('extract-text-webpack-plugin')
+var HtmlWebpackPlugin = require('html-webpack-plugin')
 var postcss = require('autoprefixer');
 var path = require('path')
 var webpack = require('webpack')
@@ -16,7 +18,7 @@ function cssLoaders (options) {
             return loader + (options.sourceMap ? extraParamChar + 'sourceMap' : '')
         }).join('!')
         if (options.extract) {
-            return require('extract-text-webpack-plugin').extract('vue-style-loader', sourceLoader)
+            return ExtractTextPlugin.extract('vue-style-loader', sourceLoader)
         } else {
             return ['vue-style-loader', sourceLoader].join('!')
         }
@@ -41,10 +43,11 @@ function styleLoaders(options) {
 }
 module.exports = {
     entry: {
-        dist: path.join(__dirname , './static/js/_preview.js')
+        app: path.join(__dirname , './static/js/_preview.js')
     },
     output: {
-        path: './',
+        path: path.resolve(__dirname, './static/dist'),
+		publicPath: '/dist/',
         filename: '[name].js'
     },
     resolve: {
@@ -84,11 +87,11 @@ module.exports = {
                     name: './fonts/[name].[ext]'
                 }
             }
-        ].concat(styleLoaders())
+        ].concat(styleLoaders({extract: true}))
     },
     devtool: '#eval-source-map',
     vue: {
-        loaders: cssLoaders(),
+        loaders: cssLoaders({extract: true}),
         postcss: [
             postcss({
                 browsers: ['last 2 versions']
@@ -96,10 +99,16 @@ module.exports = {
         ]
     },
     plugins: [
+		new ExtractTextPlugin('./css/[name].css?[contenthash]'),
         new webpack.ProvidePlugin({
             $: "jquery",
             jQuery: "jquery",
             "window.jQuery": "jquery"
         }),
+		new HtmlWebpackPlugin({
+			filename: 'preview.html',
+			template: './server/static/pages/preview.html',
+			inject: true
+		}),
     ]
 }

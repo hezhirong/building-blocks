@@ -1,7 +1,6 @@
 export default {
 	bind(el, binding) {
 		const $el = $(el);
-		console.log($el)
 		$el.on("dragover", function(ev) {
 			ev.preventDefault();
 		});

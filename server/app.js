@@ -23,6 +23,7 @@ io.set('heartbeat interval', 60000);
 io.set('heartbeat timeout', 5000);
 
 app.use(koaStatic(path.join(__dirname, 'static')));
+
 app.use(views(__dirname + '/static/pages', {
     map: {
         html: 'swig'
@@ -66,8 +67,9 @@ router.get('/', async (ctx, next) => {
 router.get('/preview/:docId', async (ctx, next) => {
     const Project = require('./modules/project.js');
     let data = await Project.findById(ctx.params.docId);
-    await ctx.render('preview', {
+    await ctx.render('../dist/preview', {
         data: {
+        	id: ctx.params.docId,
             projectName: data.projectName,
             description: data.description,
             renderData: data.renderData

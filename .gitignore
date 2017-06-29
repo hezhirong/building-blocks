@@ -4,3 +4,5 @@ npm-debug.log
 .editorconfig
 .idea/
 dist/
+/server/components/
+/server/static/dist/

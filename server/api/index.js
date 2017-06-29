@@ -29,7 +29,6 @@ const apiEntry = {
         console.log(`<----- 【${path}】`);
 
         if (this[path]) {
-            console.log(123)
             this[path]
                 .call( {io, socket, end, success, error}, receiveData.data)
                 // .catch(e => {
@@ -42,7 +41,7 @@ const apiEntry = {
                 // });
         }
         else {
-            end(404, 'interface not exits');
+            end(404, '没找到指定的方法: ' + path);
         }
     }
     // api下所有文件

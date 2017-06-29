@@ -22,10 +22,11 @@
 	</el-form>
 </template>
 <script>
-	import Event from '../../../js/event.js'
+	import {Event, PostMessage} from '../../../js/util.js'
 	import Control from './Control.js'
 
 	let timeout = 0;
+	let postProps = [];
 	export default {
 		data() {
 			return {
@@ -54,9 +55,14 @@
 		        clearTimeout(timeout);
 		        timeout = setTimeout( () => {
                     this.$refs.propForm.validate( valid => {
+                        postProps.push(control)
                         if (valid) {
-                            let data = JSON.stringify({key: this.customProps.key, props: control});
-                            window.frames[0].postMessage(data, '*');
+                            let data = {
+                                key: this.customProps.key, props: postProps
+                            };
+                            PostMessage('changeProps', data, true);
+                            // window.frames[0].postMessage(data, '*');
+                            postProps = [];
                         }
                     })
 		        }, 300)
@@ -64,7 +70,6 @@
 		},
 		mounted() {
             Event.on('changeComponent', (data = {}) => {
-                console.log(data)
                 let list = [];
                 if (data.props && data.key) {
                     Object.keys(data.props).forEach(key => {

@@ -19,6 +19,7 @@
 	import ComponentList from './components/ComponentList.vue'
 	import ComponentProp from './components/ComponentProp.vue'
 	import PreviewPage from './components/PreviewPage.vue'
+	import {Event} from '../../js/util'
 	export default {
 		data() {
 			return {
@@ -41,6 +42,14 @@
 						break;
 				}
 			}
+		},
+		mounted() {
+            Event.on('pushComponent', (data) => {
+                data.id = this.previewData.id;
+                this.socket.post('/pushComponent', data).then( res => {
+
+                })
+            })
 		},
 		components: {
 			HeaderMenu,
@@ -65,15 +74,12 @@
 		}
 		.components-box {
 			width: 200px;
-			border: 1px solid red
 		}
 		.custom-page {
 			flex: 1;
-			border: 1px solid yellow
 		}
 		.prop-config {
 			width: 300px;
-			border: 1px solid green
 		}
 	}
 </style>

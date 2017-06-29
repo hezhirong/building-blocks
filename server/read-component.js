@@ -36,13 +36,23 @@ new Vue({
 }
 
 
+function exists(path){
+	return fs.existsSync(path) || fs.existsSync(path);
+}
+function isDir(path){
+	return exists(path) && fs.statSync(path).isDirectory();
+}
 module.exports = () => {
 	var dirNames = fs.readdirSync(path.join(__dirname, componentsPath)),
         jsPath = 'static/js/_preview.js';
 	dirNames.forEach( dirName => {
 		let componentPath = './' + path.join(componentsPath, dirName),
-			// 读取配置文件 index.js
-			_tmp = require( componentPath );
+			absolutePath = path.join(__dirname, componentPath);
+		if(!isDir(absolutePath)) {
+			return false;
+		}
+		// 读取配置文件 index.js
+		let _tmp = require( componentPath );
 
 		if (_tmp.entry && _tmp.tag && !componentsData[_tmp.tag]) {
 		    // TODO: 需要判断入口文件是否存在
@@ -64,8 +74,8 @@ module.exports = () => {
     console.log('使用webpack打包生成preview.js')
     var webpack = require('webpack')
     var config = require('./webpack.project.conf')
-    config.entry.dist = path.join(__dirname , './static/js/_preview.js');
-    config.output.path = path.join(__dirname , './static/js/');
+    // config.entry.dist = path.join(__dirname , './static/js/_preview.js');
+    // config.output.path = path.join(__dirname , './static/js/');
     webpack(config,  (e) => {
         console.log('end -> 打包preview.js成功')
     })

@@ -3,12 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <title>预览页面</title>
+    <meta name="keywords" content="" />
+    <meta name="description" content="" />
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="screen-orientation" content="portrait" />
+    <meta name="full-screen" content="yes" />
+    <meta name="browsermode" content="application" />
+    <meta name="x5-orientation" content="portrait" />
+    <meta name="x5-fullscreen" content="true" />
+    <meta name="x5-page-mode" content="app" />
+    <meta http-equiv="Expires" content="-1" />
+    <meta http-equiv="Cache-Control" content="no-cache" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <script>
+        (function(e,d){var a=750;var f=d.screen.width/a/d.devicePixelRatio;e.querySelector("meta[name=viewport]").setAttribute("content","target-densitydpi=device-dpi,width="+a+",user-scalable=no,initial-scale="+f);var g=e.documentElement;var c="orientationchange"in window?"orientationchange":"resize";var b=function(){var h=g.clientWidth;if(!h){return}g.style.fontSize=10*(h/a)+"px"};if(!e.addEventListener){return}b();d.addEventListener(c,b,false);e.addEventListener("DOMContentLoaded",b,false)})(document,window);
+    </script>
 </head>
 <body>
 <div id="app"></div>
 <script>
+    console.log(document.documentElement.clientWidth)
     var data = {{data|json|raw}}
 </script>
-<script src="/js/dist.js"></script>
 </body>
 </html>

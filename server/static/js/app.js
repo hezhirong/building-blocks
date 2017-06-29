@@ -7,7 +7,7 @@ import 'font-awesome/css/font-awesome.min.css'
 import App from '../views/home/index.vue'
 import dragable from '../directives/dragable/index';
 import socket from './socket.js'
-import event from './event'
+import {Event} from './util'
 
 import '../scss/index.scss'
 
@@ -17,27 +17,22 @@ Vue.directive('dragable', dragable);
 
 Vue.prototype.socket = socket;
 
-
 window.addEventListener("message", e => {
-	// try {
-		if (typeof e.data === 'string') {
-			let data = JSON.parse(e.data, function (key, value) {
-					if (value && typeof value === 'string' && value.indexOf('function') != -1) {
-						let func = eval('(' + value +')');
-						return func;
-					}
-					return value;
-				}),
-				type = data.type;
-				console.log('***** message to *****', data)
-			if (type) {
-				delete data.type;
-				event.emit(type, data);
-			}
+	if (typeof e.data === 'string') {
+		let data = JSON.parse(e.data, function (key, value) {
+				if (value && typeof value === 'string' && value.indexOf('function') != -1) {
+					let func = eval('(' + value +')');
+					return func;
+				}
+				return value;
+			}),
+			type = data.type;
+			console.log('***** post to parent *****', data)
+		if (type) {
+			delete data.type;
+			Event.emit(type, data);
 		}
-	// } catch(e) {
-	// 	console.log(e)
-	// }
+	}
 }, false);
 
 new Vue({

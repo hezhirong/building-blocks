@@ -1,7 +1,7 @@
 <template>
 	<div class="w100p h100p wrapper">
 		<div class="content" :style="contentStyle" v-if="previewData">
-			 <iframe :src="previewUrl" border="0" style="width: 100%; height: 100%; border: none"></iframe>
+			 <iframe :src="previewUrl" border="0"></iframe>
 		</div>
 	</div>
 </template>
@@ -60,5 +60,14 @@
 		margin: 20px auto;
 		transition: all .3s linear;
 		background: #fff;
+        position: relative;
+        iframe {
+            width:1500px!important;
+            height:2667px!important;
+            transform: scale(0.25, 0.25);
+            transform-origin: 0 0;
+            position: absolute;
+            border: none;
+        }
 	}
 </style>

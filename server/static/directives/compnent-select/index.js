@@ -1,4 +1,5 @@
 const className = 'selected-component';
+import {PostMessage} from '../../js/util'
 export default {
     bind(el, binding, vnode) {
         $(el).on('click', function () {
@@ -9,8 +10,12 @@ export default {
         	let props = vnode.componentOptions.Ctor.options.props,
 				instance = vnode.componentInstance,
 				key = vnode.data.attrs.key;
-            // console.log('props', props)
-            console.log('***** selected vnode *****', vnode);
+			if (!props) {
+				console.log('***** selected vnode *****', vnode);
+				return false;
+			}
+			// console.log('props', props)
+			console.log('***** selected vnode *****', vnode);
 			// 设定默认值
 			Object.keys(props).forEach( key => {
 				if (props[key] && props[key]['default']) {
@@ -19,13 +24,7 @@ export default {
 			})
             $('.selected-component').removeClass(className);
             $this.addClass(className);
-			let msg = JSON.stringify({ type: 'changeComponent', props, key}, function(key, val) {
-				if (typeof val === 'function') {
-					return val + '';
-				}
-				return val;
-			})
-			window.parent.postMessage(msg, '*')
+			PostMessage('changeComponent', {props, key});
         })
     }
 }
