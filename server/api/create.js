@@ -94,7 +94,7 @@ const AuthApi = {
 			this.error('创建项目失败');
 		})
 	},
-	'POST /pushComponent': async function (data) {
+	'POST /updateComponent': async function (data) {
 		try {
 			var id = data.id;
 			delete data.id;

@@ -7,7 +7,7 @@ const Koa = require('koa');
 const mongoose = require("mongoose")
 const koaStatic = require("koa-static");
 const Router = require('koa-router');
-
+const session = require('koa-session');
 const app = new Koa();
 const views = require('koa-views');
 const router = new Router();
@@ -15,13 +15,26 @@ const swig = require("swig");
 // support socket.io
 const server = require('http').Server(app.callback());
 const io = require('socket.io')(server);
-
+const CONFIG = {
+  key: 'sess', /** (string) cookie key (default is koa:sess) */
+  /** (number || 'session') maxAge in ms (default is 1 days) */
+  /** 'session' will result in a cookie that expires when session/browser is closed */
+  /** Warning: If a session cookie is stolen, this cookie will never expire */
+  maxAge: 'session',
+  overwrite: true, /** (boolean) can overwrite or not (default true) */
+  httpOnly: true, /** (boolean) httpOnly or not (default true) */
+  signed: true, /** (boolean) signed or not (default true) */
+  rolling: false, /** (boolean) Force a session identifier cookie to be set on every response. The expiration is reset to the original maxAge, resetting the expiration countdown. default is false **/
+};
 mongoose.Promise = Promise;
 mongoose.connect('mongodb://localhost/building-blocks');
 
 io.set('heartbeat interval', 60000);
 io.set('heartbeat timeout', 5000);
 
+app.keys = ['building-blocks secret 22222222'];
+
+app.use(session(CONFIG, app));
 app.use(koaStatic(path.join(__dirname, 'static')));
 
 app.use(views(__dirname + '/static/pages', {
@@ -94,6 +107,7 @@ app.use(async (ctx, next) => {
     // const ms = new Date() - start;
     // console.log(`${ctx.method} ${ctx.url} - ${ms}ms`);
 });
+console.log('start')
 // 读取组件信息
 var componentsData = require('./read-component.js')()
 // socket handle

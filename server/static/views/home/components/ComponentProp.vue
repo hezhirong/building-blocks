@@ -1,25 +1,20 @@
 <template>
-    <el-form id="props" :model="customProps" ref="propForm">
-        <el-table
-                border
-                :data="customProps.list"
-                style="width: 100%">
-            <el-table-column prop="label" label="name" width="100">
-            </el-table-column>
-            <el-table-column prop="value" label="value">
-                <template scope="scope">
-                    <el-form-item
-                            :prop="'list.' + scope.$index + '.$$value'"
-                            :rules="[
-                                { validator: validateControl(scope.row), trigger: 'blur,change' }
-                            ]"
-                    >
-                        <control :data="scope.row" @change="valueChange"/>
-                    </el-form-item>
-                </template>
-            </el-table-column>
-        </el-table>
-	</el-form>
+    <el-tabs v-model="activeName" @tab-click="handleClick">
+        <el-tab-pane label="属性设置" name="prop" style="padding:0 20px">
+            <el-form id="props" :model="customProps" ref="propForm" label-width="80px">
+                <el-form-item
+                        v-for="(item, index) in customProps.list"
+                        :label="item.label"
+                        :prop="'list.' + index + '.$$value'"
+                        :rules="[
+                        { validator: validateControl(item), trigger: 'blur,change' }
+                    ]"
+                >
+                    <control :data="item" @change="valueChange"/>
+                </el-form-item>
+            </el-form>
+        </el-tab-pane>
+    </el-tabs>
 </template>
 <script>
 	import {Event, PostMessage} from '../../../js/util.js'
@@ -33,7 +28,8 @@
 				customProps: {
 				    key: null,
 				    list: []
-				}
+				},
+				activeName: 'prop'
 			}
 		},
 		methods: {
@@ -66,7 +62,10 @@
                         }
                     })
 		        }, 300)
-		    }
+		    },
+            handleClick(tab, event) {
+                console.log(tab, event);
+            }
 		},
 		mounted() {
             Event.on('changeComponent', (data = {}) => {

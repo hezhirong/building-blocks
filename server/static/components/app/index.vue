@@ -5,7 +5,7 @@
 
 </template>
 <script>
-    import {PostMessage} from '../../js/util';
+    import {PostMessage, Event} from '../../js/util';
 
     let key = 0;
 	export default {
@@ -22,10 +22,30 @@
 				data.key = key;
 				data.props = {};
 				this.componentData.push(data);
-				PostMessage('pushComponent', {components: this.componentData});
+				PostMessage('updateComponent', {components: this.componentData});
+			},
+			getComponentForKey(key, func) {
+			    let newData = this.componentData.map( item => {
+                    if (item.key === data.key) {
+                        func && func(item)
+                    }
+                    return item;
+                })
+                return newData;
 			}
 		},
 		mounted() {
+            Event.on('removeComponent', key => {
+                let newData = [];
+                this.componentData.forEach( item => {
+                    if (item.key !== key) {
+                        newData.push(item)
+                    }
+                })
+                this.componentData = newData;
+                PostMessage('updateComponent', {components: this.componentData});
+            })
+		    // 绑定父节点传递来的值
             window.addEventListener("message", e => {
                 try {
                     let data = JSON.parse(e.data);
@@ -33,16 +53,13 @@
                     if (data.type === 'changeProps') {
                         // TODO: 暂时没递归
                         // 递归遍历找出节点
-                        let newData = this.componentData.map( item => {
-                            if (item.key === data.key) {
-                                data.props.forEach( prop => {
-                                    item.props[prop.propName] = prop['$$value'];
-                                })
-                            }
-                            return item;
+                        let newData = this.getComponentForKey(data.key, item => {
+                            data.props.forEach( prop => {
+                                item.props[prop.propName] = prop['$$value'];
+                            })
                         })
                         this.componentData = newData;
-                        PostMessage('pushComponent', {components: this.componentData});
+                        PostMessage('updateComponent', {components: this.componentData});
                     }
                 } catch(e) {
                     console.log(e)

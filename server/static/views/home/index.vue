@@ -44,9 +44,9 @@
 			}
 		},
 		mounted() {
-            Event.on('pushComponent', (data) => {
+            Event.on('updateComponent', (data) => {
                 data.id = this.previewData.id;
-                this.socket.post('/pushComponent', data).then( res => {
+                this.socket.post('/updateComponent', data).then( res => {
 
                 })
             })
