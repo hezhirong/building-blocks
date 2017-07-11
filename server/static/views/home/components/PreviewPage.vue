@@ -1,6 +1,6 @@
 <template>
 	<div class="w100p h100p wrapper">
-		<div class="content" :style="contentStyle" v-if="previewData">
+		<div class="content" :style="contentStyle" v-show="previewData">
 			 <iframe :src="previewUrl" border="0"></iframe>
 		</div>
 	</div>
@@ -24,16 +24,22 @@
 			h: 736
 		}
 	}
+	import {sStorage} from '../../../js/util.js'
 	export default {
-		props: ['platform', 'previewData'],
+		props: ['platform'],
 		data() {
+			let storageProject = sStorage.get('project', true);
 			return {
-
+				previewData: storageProject || null
 			}
 		},
 		computed: {
 		    previewUrl() {
-		        return `http://localhost:9200/preview/${this.previewData.id}`;
+				if (this.previewData) {
+		        	return `http://localhost:9200/preview/${this.previewData.id}`;
+				} else {
+					return "";
+				}
 		    },
 			contentStyle() {
 				let width = "",
@@ -48,6 +54,11 @@
                     height
         		}
         	}
+		},
+		mounted() {
+			this.event.on('selectProject', project => {
+				this.previewData = project;
+			})
 		}
 	}
 </script>

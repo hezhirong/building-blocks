@@ -4,20 +4,21 @@
             <el-form id="props" :model="customProps" ref="propForm" label-width="80px">
                 <el-form-item
                         v-for="(item, index) in customProps.list"
+                        :key="index"
                         :label="item.label"
                         :prop="'list.' + index + '.$$value'"
                         :rules="[
                         { validator: validateControl(item), trigger: 'blur,change' }
                     ]"
                 >
-                    <control :data="item" @change="valueChange"/>
+                    <control :data="item" @change="valueChange"></control>
                 </el-form-item>
             </el-form>
         </el-tab-pane>
     </el-tabs>
 </template>
 <script>
-	import {Event, PostMessage} from '../../../js/util.js'
+	import {PostMessage} from '../../../js/util.js'
 	import Control from './Control.js'
 
 	let timeout = 0;
@@ -68,7 +69,7 @@
             }
 		},
 		mounted() {
-            Event.on('changeComponent', (data = {}) => {
+            this.event.on('changeComponent', (data = {}) => {
                 let list = [];
                 if (data.props && data.key) {
                     Object.keys(data.props).forEach(key => {

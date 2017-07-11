@@ -13,15 +13,16 @@
 			</div>
 		</section>
 	</div>
-</template>
+</template> 
 <script>
 	import HeaderMenu from './components/HeaderMenu.vue'
 	import ComponentList from './components/ComponentList.vue'
 	import ComponentProp from './components/ComponentProp.vue'
 	import PreviewPage from './components/PreviewPage.vue'
-	import {Event} from '../../js/util'
+	import {Event, sStorage} from '../../js/util'
+
 	export default {
-		data() {
+		data() { 
 			return {
 				pageLoading: false,
 				previewData: {
@@ -44,6 +45,10 @@
 			}
 		},
 		mounted() {
+			let userData = sStorage.get('token', true);
+			this.socket.emit('authenticate', {
+				token: userData && userData.token 
+			})
             Event.on('updateComponent', (data) => {
                 data.id = this.previewData.id;
                 this.socket.post('/updateComponent', data).then( res => {

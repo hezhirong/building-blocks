@@ -1,15 +1,21 @@
 import config from '../../../config/project';
-import { Message } from 'element-ui';
-let socketClient = require('socket.io-client');
-let platformSocketParam = { };
+import {
+    Message,
+    MessageBox
+} from 'element-ui';
+let io = require('socket.io-client');
 
 function createInterface(method) {
-    return function (path, data) {
+    return function (path, data ) {
         if (typeof this.token === 'string' && this.token !== '') {
             data.token = this.token;
         }
-        return new Promise( (resolve, reject) => {
-            this.emit('message', { method: method, path: path, data: data }, res => {
+        return new Promise((resolve, reject) => {
+            this.emit('message', {
+                method: method,
+                path: path,
+                data: data
+            }, res => {
                 console.log(res)
                 if (res.status === 200) {
                     resolve(res)
@@ -22,21 +28,33 @@ function createInterface(method) {
     };
 }
 
-function setToken(newToken) {
-    this.token = newToken;
-}
-
 function socketWrap(socket) {
-    socket.token = '';
     socket.get = createInterface('GET');
     socket.post = createInterface('POST');
     socket.put = createInterface('PUT');
     socket.delete = createInterface('DELETE');
-    socket.setToken = setToken;
+
+    socket.on('connect', function () {
+        socket
+            .on('authenticated', function () {
+                //do other things
+            })
+            .on('unauthorized', function (msg) {
+                MessageBox({
+                    type: 'warning',
+                    title: '提示',
+                    message: '登录验证失败',
+                    callback: () => {
+                        location.href="/";
+                    }
+                })
+            })
+    });
     return socket;
 }
 
 const serverUrl = process.env.NODE_ENV === 'production' ?
     `http://${config.server}:${config.port}/` :
     `http://${config.devServer}:${config.devPort}/`;
-export default socketWrap(socketClient(serverUrl, platformSocketParam));
+
+export default socketWrap(io(serverUrl));

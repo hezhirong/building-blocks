@@ -4,30 +4,44 @@ import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-default/index.css'
 import 'font-awesome/css/font-awesome.min.css'
 
-import App from '../views/home/index.vue'
+import Home from '../views/home/home.vue'
 import dragable from '../directives/dragable/index';
-import socket from './socket.js'
-import {Event} from './util'
-
+import {dateUtil} from './util.js';
+import VueRouter from 'vue-router'
+import {
+	Event
+} from './util'
+import routes from './routes'
 import '../scss/index.scss'
 
-Vue.use(ElementUI);
 
-Vue.directive('dragable', dragable);
+import socket from './socket.js'
 
 Vue.prototype.socket = socket;
+Vue.prototype.event = Event;
+Vue.prototype.error = error => {
+	console.error(error)
+}
+Vue.use(ElementUI);
+Vue.use(VueRouter);
+Vue.directive('dragable', dragable);
+Vue.filter('date', dateUtil.format);
+
+const router = new VueRouter({
+	routes
+});
 
 window.addEventListener("message", e => {
 	if (typeof e.data === 'string') {
 		let data = JSON.parse(e.data, function (key, value) {
 				if (value && typeof value === 'string' && value.indexOf('function') != -1) {
-					let func = eval('(' + value +')');
+					let func = eval('(' + value + ')');
 					return func;
 				}
 				return value;
 			}),
 			type = data.type;
-			console.log('***** post to parent *****', data)
+		console.log('***** post to parent *****', data)
 		if (type) {
 			delete data.type;
 			Event.emit(type, data);
@@ -36,5 +50,6 @@ window.addEventListener("message", e => {
 }, false);
 
 new Vue({
-  render: h => h(App)
+	router,
+	render: h => h(Home)
 }).$mount('#app')

@@ -1,8 +1,8 @@
 <template>
 	<div class="component-list">
 		<el-collapse>
-  			<el-collapse-item :title="groupData[key]" name="index" v-for="(item, key) in list">
-  				<div class="component-item" v-for="component in item" v-dragable="component" >
+  			<el-collapse-item :title="groupData[key]" name="index" v-for="(item, key) in list" :key="key">
+  				<div class="component-item" v-for="(component, index) in item" v-dragable="component" :key="index" >
   					<h6>
                         <span class="component-icon" :style="{backgroundImage: `url(${component.icon})` }">
                             {{component.name}}

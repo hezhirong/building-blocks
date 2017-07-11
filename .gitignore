@@ -6,3 +6,4 @@ npm-debug.log
 dist/
 /server/components/
 /server/static/dist/
+.vscode/
