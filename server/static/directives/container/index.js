@@ -1,5 +1,6 @@
+import {Event, loop} from "../../js/util"
 export default {
-	bind(el, binding) {
+	bind(el, binding, vnode) {
 		const $el = $(el);
 		$el.on("dragover", function(ev) {
 			ev.preventDefault();
@@ -14,8 +15,17 @@ export default {
 			} catch(e) {
 				throw new Error('格式化数据失败');
 			}
-			if (binding.value instanceof Function) {
-				binding.value(formData)
+			let slotName = Object.keys(binding.modifiers)[0];
+			if (slotName) {
+				let key = vnode.context.$el.getAttribute('key') | 0;
+				formData.slotName = slotName;
+				Event.emit('container', {
+					key,
+					slots: [
+						formData
+					]
+				});
+
 			}
 			ev.stopPropagation();
 		})

@@ -12,7 +12,11 @@ const AuthApi = {
 		})
 		project.save().then( doc => {
             this.success({
-            	id: doc._id
+				projectName: doc.projectName,
+				description: doc.description,
+				createTime: doc.meta.createAt,
+				updateTime: doc.meta.updateAt,
+				id: doc._id
 			})
 		}).catch( e => {
 			// 保存失败删除目录

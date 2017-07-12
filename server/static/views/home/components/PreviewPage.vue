@@ -1,7 +1,8 @@
 <template>
 	<div class="w100p h100p wrapper">
+		<img src="http://localhost:8181/img/phone.png" class="phone-img" :style="phoneStyle"/>
 		<div class="content" :style="contentStyle" v-show="previewData">
-			 <iframe :src="previewUrl" border="0"></iframe>
+			<iframe :src="previewUrl" border="0"></iframe>
 		</div>
 	</div>
 </template>
@@ -25,6 +26,7 @@
 		}
 	}
 	import {sStorage} from '../../../js/util.js'
+	import '../../../images/phone.png'
 	export default {
 		props: ['platform'],
 		data() {
@@ -41,6 +43,17 @@
 					return "";
 				}
 		    },
+			phoneStyle() {
+				let width = "",
+					height = "",
+					cur = platformType[this.platform || 'iphone6'];
+				if (cur) {
+					width = cur.w * 1.07 + 'px';
+				}
+        		return {
+                    width
+        		}
+			},
 			contentStyle() {
 				let width = "",
 					height = "",
@@ -50,6 +63,7 @@
 					height = cur.h + 'px';
 				}
         		return {
+					marginTop: '110px',
                     width,
                     height
         		}
@@ -66,10 +80,24 @@
 	.wrapper {
 		background: #ccc;
 		overflow: auto;
+		position: relative;
+	}
+	.phone-back {
+		background: url(../../../images/phone.png) center top no-repeat;
+		background-size: contain;
+		width: 375px;
+		margin: 20px auto;
+		overflow: hidden;
+	}
+	.phone-img {
+		position: absolute;
+		width: 375px;
+		top: 20px;
+		left: 50%;
+		transform: translate(-50%);
 	}
 	.content {
-		margin: 20px auto;
-		transition: all .3s linear;
+		margin: 0 auto;
 		background: #fff;
         position: relative;
         iframe {

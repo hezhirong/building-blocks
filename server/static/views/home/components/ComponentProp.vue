@@ -58,11 +58,10 @@
                                 key: this.customProps.key, props: postProps
                             };
                             PostMessage('changeProps', data, true);
-                            // window.frames[0].postMessage(data, '*');
                             postProps = [];
                         }
                     })
-		        }, 300)
+		        }, 500)
 		    },
             handleClick(tab, event) {
                 console.log(tab, event);
@@ -71,6 +70,7 @@
 		mounted() {
             this.event.on('changeComponent', (data = {}) => {
                 let list = [];
+                console.log(data)
                 if (data.props && data.key) {
                     Object.keys(data.props).forEach(key => {
                         let item = data.props[key];
@@ -83,6 +83,11 @@
                         list,
                         key: data.key
                     }
+                }
+            })
+            this.event.on('clearComponentProps', () => {
+                this.customProps = {
+                    list: []
                 }
             })
 		},

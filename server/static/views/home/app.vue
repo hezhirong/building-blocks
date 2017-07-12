@@ -6,7 +6,7 @@
 				<component-list></component-list>
 			</div>
 			<div class="custom-page">
-				<preview-page :previewData="previewData"></preview-page>
+				<preview-page></preview-page>
 			</div>
 			<div class="prop-config">
 				<component-prop></component-prop>
@@ -25,9 +25,6 @@
 		data() { 
 			return {
 				pageLoading: false,
-				previewData: {
-				    id: '594f4a8f8727a83072d75e31'
-				},
 			   	componentList: []
 			}
 		},
@@ -37,7 +34,10 @@
 					case "createProject":
 						this.pageLoading = true;
 						this.socket.get('/new_project', projectData).then( res => {
-							this.previewData = res;
+							// 触发事件
+							this.event.emit('selectProject', res.data);
+							// 存入sessionstorage
+							sStorage.set('project', res.data);
 							this.pageLoading = false;
 						}).catch( res => this.pageLoading = false )
 						break;
@@ -50,7 +50,7 @@
 				token: userData && userData.token 
 			})
             Event.on('updateComponent', (data) => {
-                data.id = this.previewData.id;
+				console.log(data)
                 this.socket.post('/updateComponent', data).then( res => {
 
                 })

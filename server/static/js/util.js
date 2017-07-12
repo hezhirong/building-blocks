@@ -43,6 +43,18 @@ const storage = (isSession = false) => {
 		}
 	}
 }
+const _loop = (data, id, callback, name="key") => {
+	data.forEach((item, index, arr) => {
+		if (item[name] === id) {
+			return callback(item, index, arr);
+		} else if (id === null) {
+			callback(item, index, arr);
+		}
+		if (item.slots) {
+			return _loop(item.slots, id, callback, name);
+		}
+	});
+}
 export const Event = {
 	emit: (key, value) => {
 		_event.$emit(key, value)
@@ -68,7 +80,9 @@ export const PostMessage = (type, data, isFrame) => {
 
 export const sStorage = storage(true);
 export const lStorage = storage();
-
+export const deepCopy = (data) => {
+	return JSON.parse(JSON.stringify(data))
+}
 export const dateUtil = {
     format(value, formatStr='YYYY-MM-DD HH:mm:ss') {
         if (formatStr === "date") {
@@ -87,3 +101,5 @@ export const dateUtil = {
         return moment(date);
     },
 };
+
+export const loop = _loop;

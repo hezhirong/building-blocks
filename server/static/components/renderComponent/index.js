@@ -1,4 +1,35 @@
+const buildSlots = (component, h) => {
+    let temp = {}, scopedSlots = {};
 
+    component.slots.forEach( slotComponent => {
+        if (!temp[slotComponent.slotName]) {
+            temp[slotComponent.slotName] = [];
+        }
+        temp[slotComponent.slotName].push(slotComponent);
+    })
+    Object.keys(temp).forEach(key => {
+        scopedSlots[key] = props => h('div', {}, temp[key].map( component => {
+            return h(component.tag, buildOptions(component, h))
+        }))
+    })
+    return scopedSlots;
+}
+const buildOptions = (component, h) => {
+    let options = {
+        props: {...component.props},
+        attrs: { key: component.key },
+        directives: [
+            {
+                name: 'select',
+            }
+        ]
+    }
+    // 解析solt 子组件
+    if (component.slots) {
+        options.scopedSlots = buildSlots(component, h);
+    }
+    return options;
+};
 export default {
     functional: true,
     render: function (h, ctx) {
@@ -7,21 +38,12 @@ export default {
         	console.log('***** render *****', props.source)
             return h('div', { attrs: {id: 'rootComponent'} }, props.source.map(component => {
                 return h(component.tag,
-                    {
-                        props: component.props,
-						attrs: { key: component.key },
-                        directives: [
-                            {
-                                name: 'select',
-                            }
-                        ]
-                    },
+                    buildOptions(component, h),
                     component.children || []
                 );
             }));
         }
         return h('div', { attrs: {id: 'rootComponent'}} )
-        // return h('div', {}, [h('za-hello', {props: {hello: 'hello world'}})])
     }
 }
 /*

@@ -2,72 +2,82 @@
     <div id="component-wrap" v-dropable="dropChange">
         <rc :source="componentData"></rc>
     </div>
-
 </template>
 <script>
-    import {PostMessage, Event} from '../../js/util.js';
-    //DOTO: key 读取时有bug
+    import {PostMessage, Event, loop, deepCopy} from '../../js/util.js';
     let $$key = 0;
 	export default {
 		data() {
-            let renderData = window.data && window.data.renderData;
-		    renderData = renderData || [];
+            let projectData = window.data || {},
+		        renderData = projectData.renderData || [];
 			return {
+                projectData: projectData,
 				componentData: renderData
 			}
 		},
         created() {
-            let copy = this.componentData.slice(0);
-            copy.sort( (item1, item2) => item1.key < item2.key )
-            $$key = copy[0].key;
+            let _tmpKey = 0;
+            loop(this.componentData, null, (item, index, arr) => {
+                _tmpKey = item.key > _tmpKey ? item.key : _tmpKey;
+            });
+            $$key = _tmpKey;
         },
 		methods: {
+            // 拖拽组件
 			dropChange(data) {
 			    $$key += 1;
 				data.key = $$key;
 				data.props = {};
+                data.children = [];
 				this.componentData.push(data);
-				PostMessage('updateComponent', {components: this.componentData});
+				this.updateComponent();
 			},
-			getComponentForKey(key, func) {
-			    let newData = this.componentData.map( item => {
-                    if (item.key === key) {
-                        item = func(item)
-                    }
-                    return item;
-                })
-                return newData;
-			}
+            updateComponent() {
+                PostMessage('updateComponent', {components: this.componentData, id: this.projectData.id});
+            }
 		},
 		mounted() {
+            // 删除组件
             Event.on('removeComponent', key => {
-                let newData = [];
-                this.componentData.forEach( item => {
-                    if (item.key !== key) {
-                        newData.push(item)
+                loop(this.componentData, key, (item, index, arr) => arr.splice(index, 1));
+                this.componentData = deepCopy(this.componentData);
+                PostMessage('clearComponentProps')
+                this.updateComponent();
+            })
+            // 容器追加组件
+            Event.on('container', data => {
+                // 查找对应组件 添加子组件
+                loop(this.componentData, data.key, (item, index, arr) => {
+                    data.slots.forEach( item => {
+                        $$key += 1;
+                        item.props = {};
+                        item.children = [];
+                        item.key = $$key
+                    })
+                    if (item.slots) {
+                        item.slots = [...item.slots, ...data.slots]    
+                    } else {
+                        item.slots = data.slots;
                     }
                 })
-                this.componentData = newData;
-                PostMessage('updateComponent', {components: this.componentData});
+                this.componentData = this.componentData.splice(0)
+                this.updateComponent();
             })
 		    // 绑定父节点传递来的值
             window.addEventListener("message", e => {
-                alert('iframe')
                 try {
                     let data = JSON.parse(e.data);
                     console.log('***** post iframe message *****', data)
                     if (data.type === 'changeProps') {
-                        // TODO: 暂时没递归
-                        // 递归遍历找出节点
-                        let newData = this.getComponentForKey(data.key, item => {
+                        // 递归遍历找出节点 修改props
+                        loop(this.componentData, data.key, item => {
                             data.props.forEach( prop => {
                                 item.props[prop.propName] = prop['$$value'];
                             })
-                            return item;
                         })
 
-                        this.componentData = newData;
-                        PostMessage('updateComponent', {components: this.componentData});
+                        this.componentData = this.componentData.slice(0);
+                        this.updateComponent();
                     }
                 } catch(e) {
                     console.log(e)

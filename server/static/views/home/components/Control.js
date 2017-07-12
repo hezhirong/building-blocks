@@ -72,6 +72,10 @@ export default {
 		let props = ctx.props,
 			listeners = ctx.listeners,
 			data = props.data;
+		if (typeof controlRender[data.cType] !== "function") {
+			console.error ( `cType: ${data.cType} 不存在` );
+			return h('div')
+		}
 		return controlRender[data.cType](h, data, listeners);
 		// return h('div', {}, [h('za-hello', {props: {hello: 'hello world'}})])
 	}

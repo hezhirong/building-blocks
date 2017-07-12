@@ -1,13 +1,27 @@
-
 import Login from '../views/home/login.vue'
 import App from '../views/home/app.vue'
 const Home = {
     template: '<router-view></router-view>'
 };
-let routes = [ 
-    { path: '/', redirect: () =>  "/login" },
-    { path: '/login', component: Login },
-    { path: '/index', component:  App }
+let routes = [{
+        path: '/',
+        redirect: () => "/login"
+    },
+    {
+        path: '/login',
+        component: Login
+    },
+    {
+        path: '/index',
+        component: App
+    },
+    {
+        path: '*',
+        hidden: true,
+        redirect: {
+            path: '/login'
+        }
+    }
 ]
 
 export default routes;

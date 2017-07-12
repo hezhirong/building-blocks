@@ -1,14 +1,26 @@
 const className = 'selected-component';
 const relative = 'position-relative';
 import {PostMessage, Event} from '../../js/util'
+
+let selectComponentKey = null;
+console.log(selectComponentKey)
+document.body.onkeydown = function (e) {
+	if (e.keyCode === 8 && selectComponentKey) {
+		if (confirm('是否要删除组件')) {
+			Event.emit('removeComponent', selectComponentKey)
+		}
+	}
+	return false;
+}
 export default {
     bind(el, binding, vnode) {
     	let $el = $(el),
 			props = vnode.componentOptions.Ctor.options.props || {},
 			instance = vnode.componentInstance,
 			key = vnode.data.attrs.key;
-		$el.on('click', function () {
-        	let $this = $(this);
+		$el.on('click', function (e) {
+			let $this = $(this);
+			selectComponentKey = key;
 			if ($this.hasClass(className)) {
 				return false;
 			}
@@ -27,11 +39,13 @@ export default {
 			}
             $this.addClass(className);
 			PostMessage('changeComponent', {props, key});
+			return false;
 
         }).on('dblclick', function () {
 			if (confirm('是否要删除组件')) {
 				Event.emit('removeComponent', key)
 			}
+			return false;
 		})
     }
 }
