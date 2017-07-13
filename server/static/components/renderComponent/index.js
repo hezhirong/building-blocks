@@ -96,8 +96,8 @@ export default {
         // Scoped slots in the form of
         // { name: props => VNode | Array<VNode> }
         scopedSlots: {
-default: props => h('span', props.text)
-},
+    default: props => h('span', props.text)
+    },
     // 如果组件是其他组件的子组件，需为slot指定名称
     slot: 'name-of-slot'
     // 其他特殊顶层属性

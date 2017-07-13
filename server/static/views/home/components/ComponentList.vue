@@ -1,7 +1,7 @@
 <template>
 	<div class="component-list">
-		<el-collapse>
-  			<el-collapse-item :title="groupData[key]" name="index" v-for="(item, key) in list" :key="key">
+		<el-collapse v-model="activeColapseName">
+  			<el-collapse-item :title="groupData[key]" :name="key" v-for="(item, key) in list" :key="key">
   				<div class="component-item" v-for="(component, index) in item" v-dragable="component" :key="index" >
   					<h6>
                         <span class="component-icon" :style="{backgroundImage: `url(${component.icon})` }">
@@ -18,9 +18,11 @@
 		data() {
 			return {
 	    		groupData: {
-                    common: '通用'
+                    common: '通用',
+                    lottery: '抽奖'
                 },
-				list: {}
+                list: {},
+                activeColapseName: ['common']
 			}
 		},
 		mounted() {

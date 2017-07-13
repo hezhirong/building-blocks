@@ -36,7 +36,7 @@ ProjectSchema.statics = {
 		return this.findOne({_id: id})
 	},
 	findByUserId: function(userId) {
-		return this.find({userId: userId}).sort('meta.updateAt')
+		return this.find({userId: userId}).sort({'meta.updateAt': -1})
 	},
 	findByUidAndPath: function (uid, projectPath) {
 		return this.findOne({userId: uid, projectPath: path})
