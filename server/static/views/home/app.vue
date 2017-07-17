@@ -50,7 +50,6 @@
 				token: userData && userData.token 
 			})
             Event.on('updateComponent', (data) => {
-				console.log(data)
                 this.socket.post('/updateComponent', data).then( res => {
 
                 })
@@ -84,7 +83,7 @@
 			flex: 1;
 		}
 		.prop-config {
-			width: 300px;
+			width: 400px;
 		}
 	}
 </style>

@@ -81,6 +81,25 @@ router.get('/preview/:docId', async(ctx, next) => {
     })
 });
 
+router.get('/export/:docId', async(ctx, next) => {
+    let token = ctx.query.token;
+    if (token) {
+        try {
+            let decoded = jwt.verify(token, secret);
+            let {path, projectName} = await require('./export/index.js')(decoded, ctx.params.docId)
+            ctx.set('Content-disposition', `attachment; filename=${projectName}.zip`);
+            ctx.response.name = ''
+            ctx.body = fs.createReadStream(path);
+        } catch(e) {
+            ctx.status = 500;
+            ctx.body = 'download faild';
+        } 
+
+    } else {
+        ctx.status = 500;
+        ctx.body = '没有权限'
+    }
+})
 app
     .use(router.routes())
     .use(router.allowedMethods());

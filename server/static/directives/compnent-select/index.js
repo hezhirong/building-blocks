@@ -3,7 +3,6 @@ const relative = 'position-relative';
 import {PostMessage, Event} from '../../js/util'
 
 let selectComponentKey = null;
-console.log(selectComponentKey)
 document.body.onkeydown = function (e) {
 	if (e.keyCode === 8 && selectComponentKey) {
 		if (confirm('是否要删除组件')) {

@@ -6,6 +6,7 @@ import 'font-awesome/css/font-awesome.min.css'
 
 import Home from '../views/home/home.vue'
 import dragable from '../directives/dragable/index';
+import downloadFile from '../directives/download-file/index'
 import {dateUtil} from './util.js';
 import VueRouter from 'vue-router'
 import {
@@ -25,6 +26,7 @@ Vue.prototype.error = error => {
 Vue.use(ElementUI);
 Vue.use(VueRouter);
 Vue.directive('dragable', dragable);
+Vue.directive('download', downloadFile);
 Vue.filter('date', dateUtil.format);
 
 const router = new VueRouter({
