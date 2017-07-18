@@ -30,6 +30,7 @@ const controlRender = {
         },
         select: (h, data, listeners) => {
             let options = Array.isArray(data.options) ? data.options : [];
+            console.log(data)
             return h(
                 "el-select",
                 {
@@ -39,7 +40,6 @@ const controlRender = {
                     },
                     on: {
                         input: function(event) {
-                            // console.log(event)
                             data[vName] = event;
                             listeners.change(data);
                         }
@@ -83,7 +83,6 @@ const controlRender = {
                     if (!data.model) {
                         return false;
                     }
-
                     let modelKeys = Object.keys(data.model),
                         len = modelKeys.length,
                         cell = Math.floor(23 / len);
@@ -91,7 +90,7 @@ const controlRender = {
                         let item = {
                             ...data.model[key],
                             $$key: key,
-                            [vName]: dataItem[key]
+                            [vName]: dataItem[key] || dataItem[key]['default'] || ''
                         };
                         let type = getCType(item.cType);
                         return h(
@@ -189,14 +188,14 @@ const controlRender = {
         },
         object: (h, data, listeners) => {
             let renderRowData = [];
-            let defaultData = data[vName] || {};
             let modelKeys = Object.keys(data.model),
                 len = modelKeys.length;
+            data[vName] = data[vName] || {};
             renderRowData = modelKeys.map(key => {
                 let item = {
                     ...data.model[key],
                     $$key: key,
-                    [vName]: defaultData[key]
+                    [vName]: data[vName][key] || data.model[key]['default'] || ''
                 };
                 let type = getCType(item.cType);
                 return h(
@@ -215,8 +214,7 @@ const controlRender = {
                         h("el-col", { props: { span: 15 } }, [
                             controlRender[type](h, item, {
                                 change: changeData => {
-                                    data[vName][changeData.$$key] =
-                                        changeData[vName];
+                                    data[vName][changeData.$$key] = changeData[vName];
                                 }
                             })
                         ])
@@ -261,9 +259,7 @@ export default {
             listeners = ctx.listeners,
             data = props.data,
 			type = getCType(data.cType);
-			console.log(data)
         return controlRender[type](h, data, listeners);
-
         // return h('div', {}, [h('za-hello', {props: {hello: 'hello world'}})])
     }
 };

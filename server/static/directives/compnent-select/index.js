@@ -15,6 +15,7 @@ export default {
     bind(el, binding, vnode) {
     	let $el = $(el),
 			props = vnode.componentOptions.Ctor.options.props || {},
+			styles = vnode.componentInstance.$vnode.data.style || {},
 			instance = vnode.componentInstance,
 			key = vnode.data.attrs.key;
 		$el.on('click', function (e) {
@@ -37,7 +38,7 @@ export default {
 				$this.addClass(relative)
 			}
             $this.addClass(className);
-			PostMessage('changeComponent', {props, key});
+			PostMessage('changeComponent', {props, key, styles});
 			return false;
 
         }).on('dblclick', function () {

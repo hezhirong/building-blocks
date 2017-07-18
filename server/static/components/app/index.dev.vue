@@ -78,6 +78,17 @@
 
                         this.componentData = this.componentData.slice(0);
                         this.updateComponent();
+                    } else if (data.type === 'changeStyles') {
+                        loop(this.componentData, data.key, item => {
+                            data.styles.forEach( prop => {
+                                if (!item.style) {
+                                    this.$set(item, 'style', {});
+                                }
+                                item.style[prop.propName] = prop['$$value'];
+                            })
+                        })
+                        this.componentData = this.componentData.slice(0);
+                        this.updateComponent();
                     }
                 } catch(e) {
                     console.log(e)

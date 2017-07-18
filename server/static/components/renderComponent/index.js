@@ -17,6 +17,7 @@ const buildSlots = (component, h) => {
 const buildOptions = (component, h) => {
     let options = {
         props: {...component.props},
+        style: {...component.style},
         attrs: { key: component.key },
         directives: [
             {

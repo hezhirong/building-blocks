@@ -8,3 +8,4 @@ dist/
 /server/static/dist/
 /server/exportDirectory/
 .vscode/
+/server/static/js/_preview.js
