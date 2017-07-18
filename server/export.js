@@ -63,6 +63,8 @@ module.exports = async function(user, projectId) {
     // 复制preview.html 替换data数据
     var html = shell.cat(path.join(__dirname, '../static/pages/preview.html'));
     html = html.replace('{{data|json|raw}}', JSON.stringify(data));
+    // 替换页面title
+    html = html.replace(/(?<=title\>).*(?=<\/title)/, data.title);
     shell.touch(htmlDir);
     shell.echo(html).to(htmlDir);
     // 生成js

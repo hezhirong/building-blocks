@@ -86,7 +86,7 @@ router.get('/export/:docId', async(ctx, next) => {
     if (token) {
         try {
             let decoded = jwt.verify(token, secret);
-            let {path, projectName} = await require('./export/index.js')(decoded, ctx.params.docId)
+            let {path, projectName} = await require('./export.js')(decoded, ctx.params.docId)
             ctx.set('Content-disposition', `attachment; filename=${projectName}.zip`);
             ctx.response.name = ''
             ctx.body = fs.createReadStream(path);

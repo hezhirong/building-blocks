@@ -21,7 +21,6 @@ const util = {
 		if (!fs.existsSync(dirpath)) {
 	        var pathtmp,
 	            dirsStep = dirpath.split(path.sep);
-			console.log(dirsStep)
 			dirsStep.forEach(function(dirname) {
 			    if (dirname) {
                     if (pathtmp) {
@@ -43,10 +42,8 @@ const util = {
 	},
 	rmdir: function deleteFolder(path) {
 	    var files = [];
-        console.log(path)
 	    if( fs.existsSync(path) ) {
 	        files = fs.readdirSync(path);
-            console.log(files)
 	        files.forEach(function(file,index){
 	            var curPath = path + "/" + file;
 	            if(fs.statSync(curPath).isDirectory()) { // recurse
@@ -64,7 +61,7 @@ const util = {
 		let pluginPath = get('../js/develop-plugs.js', '../../../static/js/product-plugs.js');
 		const importComponent = () => {
 			let str = '';
-			str += `Vue.component("App", require('${get("../components/app/index.vue", "../../../static/components/app/index.vue")}'))\n`;
+			str += `Vue.component("App", require('${get("../components/app/index.dev.vue", "../../../static/components/app/index.product.vue")}'))\n`;
 			Object.keys(componentsData).forEach( tag => {
 				// ../../components/hello/hello.vue
 				str += `Vue.component('${tag}', require('${get(componentsData[tag].requirePath, path.join('../../../', componentsData[tag].componentPath))}'))\n`

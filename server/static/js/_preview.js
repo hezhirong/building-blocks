@@ -8,7 +8,7 @@
 
 			Vue.use(plugins);
 			/* components */
-			Vue.component("App", require('../components/app/index.vue'))
+			Vue.component("App", require('../components/app/index.dev.vue'))
 Vue.component('za-asset', require('../../components/assets/page/index.vue'))
 Vue.component('za-hello', require('../../components/hello/hello.vue'))
 Vue.component('za-layout', require('../../components/laoyout/index.vue'))
