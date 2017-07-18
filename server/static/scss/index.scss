@@ -28,7 +28,11 @@ html, body, #app {
 .header-nav {
 	margin-left: 200px;
 }
-
+.text-hiden {
+	overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+}
 
 // 重置样式
 .ivu-icon {

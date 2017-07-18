@@ -1,5 +1,5 @@
 <template>
-    <div id="component-wrap" v-dropable="dropChange">
+    <div id="component-wrap" v-dropable="dropChange" class="dev">
         <rc :source="componentData"></rc>
     </div>
 </template>

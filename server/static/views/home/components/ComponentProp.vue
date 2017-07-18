@@ -9,6 +9,11 @@
                 </el-form-item>
             </el-form>
         </el-tab-pane>
+        <!-- <el-tab-pane label="通用样式" name="style" style="padding:0 20px">
+            <el-form-item v-for="(item, index) in customStyle" :key="index" :label="item.label">
+                <control :data="item" @change="styleChange"></control>
+            </el-form-item>
+        </el-tab-pane> -->
     </el-tabs>
 </template>
 <script>
@@ -20,6 +25,13 @@ let postProps = [];
 export default {
     data() {
         return {
+            customStyle: [
+                { label: 'width', cType: 'text', $$value: '100%' },
+                { label: 'height', cType: 'text', $$value: 'auto' },
+                { label: 'padding', cType: 'text', $$value: '0' },
+                { label: 'border', cType: 'text', $$value: 'none' },
+                { label: 'margin', cType: 'text', $$value: '0' }
+            ],
             customProps: {
                 key: null,
                 list: []
@@ -57,6 +69,9 @@ export default {
                 })
             }, 500)
         },
+        styleChange(control, value) {
+            console.log(value)
+        },
         handleClick(tab, event) {
             console.log(tab, event);
         }
@@ -64,7 +79,7 @@ export default {
     mounted() {
         this.event.on('changeComponent', (data = {}) => {
             let list = [];
-            console.log(data)
+            // console.log(data)
             if (data.props && data.key) {
                 Object.keys(data.props).forEach(key => {
                     let item = data.props[key];

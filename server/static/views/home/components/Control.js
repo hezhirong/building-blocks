@@ -116,7 +116,8 @@ const controlRender = {
                             h("el-row", { props: { gutter: 8 } }, renderColData)
                         ]),
                         buildVNode(
-                            data.isDel === false || data[vName].length <= data.min,
+                            data.isDel === false ||
+                                data[vName].length <= data.min,
                             h("span"),
                             h("el-col", { props: { span: 1 } }, [
                                 h(
@@ -186,6 +187,61 @@ const controlRender = {
                 ])
             ]);
         },
+        object: (h, data, listeners) => {
+            let renderRowData = [];
+            let defaultData = data[vName] || {};
+            let modelKeys = Object.keys(data.model),
+                len = modelKeys.length;
+            renderRowData = modelKeys.map(key => {
+                let item = {
+                    ...data.model[key],
+                    $$key: key,
+                    [vName]: defaultData[key]
+                };
+                let type = getCType(item.cType);
+                return h(
+                    "el-row",
+                    { style: { marginBottom: "10px" }, props: { gutter: 8 } },
+                    [
+                        h(
+                            "el-col",
+                            {
+								props: { span: 8 },
+								
+                                class: { "text-hiden": true }
+                            },
+                            [item.label || key]
+                        ),
+                        h("el-col", { props: { span: 15 } }, [
+                            controlRender[type](h, item, {
+                                change: changeData => {
+                                    data[vName][changeData.$$key] =
+                                        changeData[vName];
+                                }
+                            })
+                        ])
+                    ]
+                );
+            });
+            return h("div", {}, [
+                h("div", {}, renderRowData),
+                h("div", {}, [
+                    h(
+                        "el-button",
+                        {
+                            props: { type: "info", size: "small" },
+                            style: { float: "right" },
+                            on: {
+                                click: () => {
+                                    listeners.change(data);
+                                }
+                            }
+                        },
+                        "同步"
+                    )
+                ])
+            ]);
+        },
         switch: "el-switch",
         checkbox: "el-checkbox",
         radio: "el-radio"
@@ -204,7 +260,8 @@ export default {
         let props = ctx.props,
             listeners = ctx.listeners,
             data = props.data,
-            type = getCType(data.cType);
+			type = getCType(data.cType);
+			console.log(data)
         return controlRender[type](h, data, listeners);
 
         // return h('div', {}, [h('za-hello', {props: {hello: 'hello world'}})])

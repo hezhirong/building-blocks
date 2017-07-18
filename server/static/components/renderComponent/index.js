@@ -8,7 +8,7 @@ const buildSlots = (component, h) => {
         temp[slotComponent.slotName].push(slotComponent);
     })
     Object.keys(temp).forEach(key => {
-        scopedSlots[key] = props => h('div', {}, temp[key].map( component => {
+        scopedSlots[key] = props => h('div', { style: { display: 'flex', width: '100%', height: '100%' } }, temp[key].map( component => {
             return h(component.tag, buildOptions(component, h))
         }))
     })

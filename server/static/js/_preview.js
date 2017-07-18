@@ -13,6 +13,7 @@ Vue.component('za-asset', require('../../components/assets/page/index.vue'))
 Vue.component('za-hello', require('../../components/hello/hello.vue'))
 Vue.component('za-layout', require('../../components/laoyout/index.vue'))
 Vue.component('za-lottery', require('../../components/lottery/index.vue'))
+Vue.component('za-view', require('../../components/view/index.vue'))
 
 			/* end components */
 			new Vue({
