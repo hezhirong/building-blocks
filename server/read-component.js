@@ -41,11 +41,20 @@ module.exports = () => {
     console.log('end -> 生成预览preview.js')
     console.log('使用webpack打包生成preview.js')
     var webpack = require('webpack')
-    var config = require('./webpack.project.conf')
+    var webpackConfig = require('./webpack.project.conf')
     // config.entry.dist = path.join(__dirname , './static/js/_preview.js');
     // config.output.path = path.join(__dirname , './static/js/');
-    webpack(config,  (e) => {
-        console.log('end -> 打包preview.js成功')
+    webpack(webpackConfig, function (err, stats) {
+        if (err) throw err
+        console.log('webpack 打包成功');
+        // process.stdout.write(stats.toString({
+        //     colors: true,
+        //     modules: false,
+        //     children: false,
+        //     chunks: false,
+        //     chunkModules: false
+        // }) + '\n')
     })
+
 	return componentsData;
 };
