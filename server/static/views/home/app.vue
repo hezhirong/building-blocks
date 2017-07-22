@@ -36,6 +36,8 @@
 						this.socket.get('/new_project', projectData).then( res => {
 							// 触发事件
 							this.event.emit('selectProject', res.data);
+							// 清空配置属性
+							this.event.emit('clearComponentProps');
 							// 存入sessionstorage
 							sStorage.set('project', res.data);
 							this.pageLoading = false;
@@ -50,9 +52,7 @@
 				token: userData && userData.token 
 			})
             Event.on('updateComponent', (data) => {
-                this.socket.post('/updateComponent', data).then( res => {
-
-                })
+                this.socket.post('/updateComponent', data)
             })
 		},
 		components: {
@@ -78,12 +78,14 @@
 		}
 		.components-box {
 			width: 200px;
+			overflow: auto;
 		}
 		.custom-page {
 			flex: 1;
 		}
 		.prop-config {
 			width: 400px;
+			overflow: auto;
 		}
 	}
 </style>

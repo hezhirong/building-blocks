@@ -30,7 +30,6 @@ const controlRender = {
         },
         select: (h, data, listeners) => {
             let options = Array.isArray(data.options) ? data.options : [];
-            console.log(data)
             return h(
                 "el-select",
                 {

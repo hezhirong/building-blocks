@@ -24,7 +24,7 @@
     </el-dialog>
 </template>
 <script>
-import {sStorage} from '../../../js/util.js'
+import {sStorage, Event} from '../../../js/util.js'
 export default {
     props: ['data', 'value'],
     data() {
@@ -34,7 +34,8 @@ export default {
             isLoading: false,
             isDisabled: true,
             currentRow: null,
-			projectData: []
+            projectData: [],
+            selectedProject: sStorage.get('project', true)
         }
     },
     watch: {
@@ -58,19 +59,24 @@ export default {
             }
 		},
         changeProject() {
-            // 提供方法
-            this.$emit('change', this.currentRow);
+            if (this.currentRow.id === this.selectedProject.id) {
+                this.$message.warning('该项目已打开');
+                return false;
+            }
             // 触发事件
             this.event.emit('selectProject', this.currentRow);
+            // 新项目清空配置属性
+            this.event.emit('clearComponentProps');
             // 存入sessionstorage
             sStorage.set('project', this.currentRow);
+            this.selectedProject = this.currentRow;
             this.dialogVisible = false;
         },
         async findProjec() {
             try {
                 this.isLoading = true;
 			    let res = await this.socket.get('/findProjectForUserId');
-			    this.projectData = res.data;
+                this.projectData = res.data;
             } catch(e) {
                 this.error(e)
             }

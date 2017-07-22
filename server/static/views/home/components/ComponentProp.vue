@@ -1,5 +1,5 @@
 <template>
-    <el-tabs v-model="activeName" @tab-click="handleClick">
+    <el-tabs v-model="activeName">
         <el-tab-pane label="属性设置" name="prop" style="padding:0 20px">
             <el-form id="props" :model="customProps" ref="propForm" label-width="80px">
                 <el-form-item v-for="(item, index) in customProps.list" :key="index" :label="item.label" :prop="'list.' + index + '.$$value'" :rules="[
@@ -20,18 +20,11 @@
     </el-tabs>
 </template>
 <script>
-import { PostMessage } from '../../../js/util.js'
+import { PostMessage, commonComponentStyle } from '../../../js/util.js'
 import Control from './Control.js'
 
 let timeout = 0;
 let postProps = [];
-let getStyleData = () => ({
-    width: { label: 'width', propName: 'width', cType: 'text', $$value: '100%' },
-    height: { label: 'height', propName: 'height', cType: 'text', $$value: 'auto' },
-    padding: { label: 'padding', propName: 'padding', cType: 'text', $$value: '0' },
-    border: { label: 'border', propName: 'border', cType: 'text', $$value: 'none' },
-    margin: { label: 'margin', propName: 'margin', cType: 'text', $$value: '0' }
-})
 export default {
     data() {
         return {
@@ -90,42 +83,47 @@ export default {
             console.log(data)
             PostMessage('changeStyles', data, true);
         },
-        handleClick(tab, event) {
-            console.log(tab, event);
-        }
-    },
-    mounted() {
-        this.event.on('changeComponent', (data = {}) => {
-            let propList = [],
-                styleList = [],
-                styleData = getStyleData();
-            // console.log(data)
-            if (data.props && data.key) {
+        initProps(data) {
+            if (data.props) {
+                let propList = [];
                 Object.keys(data.props).forEach(key => {
                     let item = data.props[key];
                     item.propName = key;
                     item.$$value = typeof item['default'] === 'function' ? item['default'] : (item['default'] || '');
                     propList.push(item)
                 })
-                Object.keys(data.styles).forEach(key => {
-                    if (styleData[key]) {
-                        styleData[key].$$value = data.styles[key]
-                    }
-                })
-                Object.keys(styleData).forEach(key => {
-                    let item = styleData[key];
-                    styleList.push(item)
-                })
-                console.log('***** props *****', data, propList)
                 this.customProps = {
                     list: propList
                 }
-                this.customStyle = {
-                    list: styleList
-                }
-                Object.keys(this.changeData).forEach( key =>  this.changeData[key] = {} );
-                this.componentKey = data.key;
             }
+        },
+        initStyles(data) {
+            let styleList = [],
+                styleData = commonComponentStyle();
+            styleData.forEach(item => {
+                item.$$value = item['default'] || '';
+                // 回写默认值
+                if (data.styles[item.propName]) {
+                    item.$$value = data.styles[item.propName]
+                }
+                styleList.push(item)
+            })
+            this.customStyle = {
+                list: styleList
+            }
+        }
+    },
+    mounted() {
+        this.event.on('changeComponent', (data = {}) => {
+            if (!data.key) {
+                return;
+            }
+            this.initProps(data)
+            this.initStyles(data);
+            // 清除缓存数据
+            Object.keys(this.changeData).forEach( key =>  this.changeData[key] = {} );
+            // 缓存key
+            this.componentKey = data.key;
         })
         this.event.on('clearComponentProps', () => {
             this.customProps = {

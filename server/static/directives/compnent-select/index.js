@@ -11,21 +11,40 @@ document.body.onkeydown = function (e) {
 	}
 	return false;
 }
+const convert = (str) => {
+	return str.replace(/\-(\w)/g, function(all, letter){
+		return letter.toUpperCase()
+	}).trim();
+}
+const getComputedStyle = el => {
+	let styles = {},
+		styleStr = el.style.cssText;
+	styleStr.split(';').forEach( 
+		item => {
+			let arr = item.split(':');
+			if (arr[0] && arr[1]) {
+				styles[convert(arr[0])] = arr.slice(1).join("").trim()
+			}
+		} 
+	)
+	return styles;
+}
 export default {
     bind(el, binding, vnode) {
     	let $el = $(el),
 			props = vnode.componentOptions.Ctor.options.props || {},
-			styles = vnode.componentInstance.$vnode.data.style || {},
 			instance = vnode.componentInstance,
 			key = vnode.data.attrs.key;
 		$el.on('click', function (e) {
+			console.log('***** selected vnode *****', vnode);
+			
 			let $this = $(this);
+				styles = getComputedStyle(el)
+			
 			selectComponentKey = key;
 			if ($this.hasClass(className)) {
 				return false;
 			}
-			console.log('***** selected vnode *****', vnode);
-
 			// 设定默认值
 			Object.keys(props).forEach( key => {
 				if (props[key]) {
