@@ -2,7 +2,7 @@
     <div class="login-background">
         <el-form :model="userForm" :rules="rules" ref="userForm" label-position="left" label-width="0px" class="demo-ruleForm login-container">
             <h3 class="title">积木系统
-                <span>v 0.0.1</span>
+                <span>v{{version}}</span>
             </h3>
             <el-form-item prop="account">
                 <el-input type="text" v-model="userForm.account" auto-complete="off" placeholder="账号"></el-input>
@@ -19,10 +19,12 @@
 
 <script>
 import {sStorage} from '../../js/util.js'
+import pkg from '../../../../package.json'
 export default {
     data() {
         return {
             logining: false,
+            version: pkg.version,
             userForm: {
                 account: '',
                 checkPass: ''

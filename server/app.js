@@ -144,7 +144,8 @@ io.on('connection', socketioJwt.authorize({
         if (!data.data) {
             data.data = {}
         }
-        data.data.userId = socket.decoded_token.id;
+        // 最近用户数据
+        data.data.userData = socket.decoded_token;
         apiModel.handle(io, socket, data, cb);
     });
     socket.on('disconnect', () => {
