@@ -76,11 +76,14 @@ export default {
             this.changeData.style[control.propName] = control
         },
         syncStyle() {
+            let changeKeys = Object.keys(this.changeData.style);
+            if (changeKeys.length === 0) {
+                return false;
+            }
             let data = {key: this.componentKey, styles: []};
-            Object.keys(this.changeData.style).forEach( key => {
+            changeKeys.forEach( key => {
                 data.styles.push(this.changeData.style[key]);
             })
-            console.log(data)
             PostMessage('changeStyles', data, true);
         },
         initProps(data) {

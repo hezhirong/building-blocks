@@ -23,7 +23,7 @@ const getComputedStyle = el => {
 		item => {
 			let arr = item.split(':');
 			if (arr[0] && arr[1]) {
-				styles[convert(arr[0])] = arr.slice(1).join("").trim()
+				styles[convert(arr[0])] = arr.slice(1).join(":").trim()
 			}
 		} 
 	)
@@ -37,8 +37,8 @@ export default {
 			key = vnode.data.attrs.key;
 		$el.on('click', function (e) {
 			console.log('***** selected vnode *****', vnode);
-			
-			let $this = $(this);
+
+			let $this = $(this),
 				styles = getComputedStyle(el)
 			
 			selectComponentKey = key;
