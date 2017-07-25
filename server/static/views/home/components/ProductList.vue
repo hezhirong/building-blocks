@@ -35,7 +35,7 @@ export default {
             isDisabled: true,
             currentRow: null,
             projectData: [],
-            selectedProject: sStorage.get('project', true)
+            selectedProject: sStorage.get('project', true) || {}
         }
     },
     watch: {

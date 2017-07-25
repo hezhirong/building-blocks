@@ -15,7 +15,8 @@ export default {
 			} catch(e) {
 				throw new Error('格式化数据失败');
 			}
-			let slotName = Object.keys(binding.modifiers)[0];
+			let slotName = binding.value;
+			console.log(slotName)
 			if (slotName) {
 				let key = vnode.context.$el.getAttribute('key') | 0;
 				formData.slotName = slotName;
