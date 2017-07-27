@@ -126,3 +126,11 @@ export const commonComponentStyle = () => [
         options: ["100%", "contain", "cover"]
     }
 ];
+
+// 常量
+export const ENUM = {
+    ss: {
+        PRODUCT: 'PRODUCT',
+        TOKEN: 'TOKEN'
+    }
+}

@@ -68,11 +68,11 @@
 </style>
 <script>
 import ProjectList from './ProductList.vue'
-import {Event, sStorage} from '../../../js/util'
+import {Event, sStorage, ENUM} from '../../../js/util'
 export default {
 	data() {
-		let project = sStorage.get('project', true);
-		let user = sStorage.get('token', true);
+		let project = sStorage.get(ENUM.ss.PRODUCT, true);
+		let user = sStorage.get(ENUM.ss.TOKEN, true);
 		return {
 			createProjectFormShow: false,
 			projectListShow: false,

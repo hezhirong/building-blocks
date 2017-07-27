@@ -24,7 +24,7 @@
     </el-dialog>
 </template>
 <script>
-import {sStorage, Event} from '../../../js/util.js'
+import {sStorage, Event, ENUM} from '../../../js/util.js'
 export default {
     props: ['data', 'value'],
     data() {
@@ -35,7 +35,7 @@ export default {
             isDisabled: true,
             currentRow: null,
             projectData: [],
-            selectedProject: sStorage.get('project', true) || {}
+            selectedProject: sStorage.get(ENUM.ss.PRODUCT, true) || {}
         }
     },
     watch: {
@@ -68,7 +68,8 @@ export default {
             // 新项目清空配置属性
             this.event.emit('clearComponentProps');
             // 存入sessionstorage
-            sStorage.set('project', this.currentRow);
+            sStorage.set(ENUM.ss.PRODUCT, this.currentRow);
+            
             this.selectedProject = this.currentRow;
             this.dialogVisible = false;
         },

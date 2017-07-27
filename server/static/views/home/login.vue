@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import {sStorage} from '../../js/util.js'
+import {sStorage, ENUM} from '../../js/util.js'
 import pkg from '../../../../package.json'
 export default {
     data() {
@@ -50,7 +50,7 @@ export default {
                     var loginParams = { username: this.userForm.account, password: this.userForm.checkPass };
                     this.socket.emit('login', loginParams, res => {
                         if (res.status === 200) {
-                            sStorage.set('token', res.data)
+                            sStorage.set(ENUM.ss.TOKEN, res.data)
                             this.$router.push('/index');
                         } else {
                             this.$message.error(res.msg);

@@ -25,12 +25,12 @@
 			h: 736
 		}
 	}
-	import {sStorage} from '../../../js/util.js'
+	import {sStorage, ENUM} from '../../../js/util.js'
 	import '../../../images/phone.png'
 	export default {
 		props: ['platform'],
 		data() {
-			let storageProject = sStorage.get('project', true);
+			let storageProject = sStorage.get(ENUM.ss.PRODUCT, true);
 			return {
 				previewData: storageProject || null
 			}
