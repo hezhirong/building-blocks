@@ -19,7 +19,7 @@
 	import ComponentList from './components/ComponentList.vue'
 	import ComponentProp from './components/ComponentProp.vue'
 	import PreviewPage from './components/PreviewPage.vue'
-	import {Event, sStorage} from '../../js/util'
+	import {Event, sStorage, ENUM } from '../../js/util'
 
 	export default {
 		data() { 
@@ -47,7 +47,7 @@
 			}
 		},
 		mounted() {
-			let userData = sStorage.get('token', true);
+			let userData = sStorage.get(ENUM.ss.TOKEN,true);
 			this.socket.emit('authenticate', {
 				token: userData && userData.token 
 			})

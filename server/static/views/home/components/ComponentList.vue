@@ -20,7 +20,8 @@
 	    		groupData: {
                     common: '通用',
                     lottery: '抽奖',
-                    layout: '布局'
+                    layout: '布局',
+                    dialog: '弹层'
                 },
                 list: {},
                 activeColapseName: ['common']

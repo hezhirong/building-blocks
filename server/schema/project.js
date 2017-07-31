@@ -7,6 +7,7 @@ var ProjectSchema = mongoose.Schema({
     description: String,
 	userId: Number,
 	renderData: Array,
+	dialogData: Array,
 	meta: {
 		createAt: {
 			type: Date,
@@ -36,7 +37,7 @@ ProjectSchema.statics = {
 		return this.findOne({_id: id})
 	},
 	findByUserId: function(userId) {
-		return this.find({userId: userId}).sort({'meta.updateAt': -1})
+		return this.find({userId: userId}).sort({'meta.updateAt': 1})
 	},
 	findByUidAndPath: function (uid, projectPath) {
 		return this.findOne({userId: uid, projectPath: path})

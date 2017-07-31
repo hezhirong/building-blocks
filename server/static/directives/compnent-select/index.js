@@ -58,7 +58,7 @@ export default {
 			}
             $this.addClass(className);
 			PostMessage('changeComponent', {props, key, styles});
-			return false;
+			// return false;
 
         }).on('dblclick', function () {
 			if (confirm('是否要删除组件')) {

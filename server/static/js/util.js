@@ -25,7 +25,7 @@ const storage = (isSession = false) => {
         },
         set(key, val) {
             if (!key) {
-                throw new Error("请输入key");
+                throw new Error("session storage error 请输入key");
             }
             if (typeof val !== "string") {
                 val = JSON.stringify(val);
@@ -110,7 +110,8 @@ export const commonComponentStyle = () => [
 	{ label: "高", propName: "height", cType: "text", default: "auto" },
     { label: "内边距", propName: "padding", cType: "text", default: "0" },
     { label: "外边距", propName: "margin", cType: "text", default: "0" },
-    { label: "border", propName: "border", cType: "text", default: "none" },
+    { label: "边框", propName: "border", cType: "text", default: "none" },
+    { label: "圆角", propName: "borderRadius", cType: "text", default: "none" },
     { label: "背景地址", propName: "backgroundImage", cType: "text" },
     { label: "背景颜色", propName: "backgroundColor", cType: "text" },
     {

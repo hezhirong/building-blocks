@@ -15,6 +15,11 @@
                     {{ scope.row.updateTime | date }}
                 </template>
             </el-table-column>
+            <el-table-column label="操作" min-width="80">
+                <template scope="scope">
+                    <el-button size="small" type="danger" @click="removeProject(scope.row)">删除</el-button>
+                </template>
+            </el-table-column>
         </el-table>
         <div slot="footer" class="dialog-footer">
             <el-button @click="dialogVisible = false">取 消</el-button>
@@ -57,10 +62,31 @@ export default {
             if (this.currentRow !== null) {
                 this.isDisabled = false;
             }
-		},
+        },
+        async removeProject(row) {
+            if (this.projectIsOpen(row)) {
+                return false;
+            }
+            try {
+                let result = this.$confirm('此操作将永久删除项目, 是否继续?')
+                if (result === 'confirm') {
+                    this.isLoading = true;
+                    let res = await this.socket.delete('/findProjectForUserId', {});
+                    this.isLoading = false;
+                }
+            } catch(e) {
+                this.isLoading = false;
+            }
+        },
+        projectIsOpen(row, msg = "该项目已打开") {
+            if (row.id === this.selectedProject.id) {
+                this.$message.warning(msg);
+                return true;
+            }
+            return false;
+        },
         changeProject() {
-            if (this.currentRow.id === this.selectedProject.id) {
-                this.$message.warning('该项目已打开');
+            if (this.projectIsOpen(this.currrentRow)) {
                 return false;
             }
             // 触发事件

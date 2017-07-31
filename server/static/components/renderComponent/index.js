@@ -14,7 +14,7 @@ const buildSlots = (component, h) => {
     })
     return scopedSlots;
 }
-const buildOptions = (component, h) => {
+const buildOptions = (component, h, ctx) => {
     let options = {
         props: {...component.props},
         style: {...component.style},
@@ -29,6 +29,15 @@ const buildOptions = (component, h) => {
     if (component.slots) {
         options.scopedSlots = buildSlots(component, h);
     }
+    if (component.name === 'button') {
+        options.nativeOn = {
+            click() {
+                ctx.parent.$refs['dialogRef'].show();
+            }
+        }
+    } else if (component.name === 'view') {
+        options.ref = 'dialogRef'
+    }
     return options;
 };
 export default {
@@ -39,7 +48,7 @@ export default {
         	console.log('***** render *****', props.source)
             return h('div', { attrs: {id: 'rootComponent'} }, props.source.map(component => {
                 return h(component.tag,
-                    buildOptions(component, h),
+                    buildOptions(component, h, ctx),
                     component.children || []
                 );
             }));

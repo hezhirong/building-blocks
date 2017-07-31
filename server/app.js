@@ -54,7 +54,7 @@ fs.readdir(`${__dirname}/api`, (err, files) => {
     }
 });
 
-// support request log
+// log
 if (env !== 'test') {
     app.use(require('koa-logger')());
 }
@@ -80,7 +80,7 @@ router.get('/preview/:docId', async(ctx, next) => {
         }
     })
 });
-
+// export
 router.get('/export/:docId', async(ctx, next) => {
     let token = ctx.query.token;
     if (token) {
