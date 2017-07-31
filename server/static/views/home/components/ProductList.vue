@@ -86,7 +86,7 @@ export default {
             return false;
         },
         changeProject() {
-            if (this.projectIsOpen(this.currrentRow)) {
+            if (this.projectIsOpen(this.currentRow)) {
                 return false;
             }
             // 触发事件
