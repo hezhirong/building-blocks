@@ -92,6 +92,9 @@ export default {
                 Object.keys(data.props).forEach(key => {
                     let item = data.props[key];
                     item.propName = key;
+                    if (!item.label) {
+                        item.label = key;
+                    }
                     item.$$value = typeof item['default'] === 'function' ? item['default'] : (item['default'] || '');
                     propList.push(item)
                 })

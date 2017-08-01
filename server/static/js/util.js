@@ -107,13 +107,16 @@ export const loop = _loop;
 // 组件通用的样式
 export const commonComponentStyle = () => [
     { label: "宽", propName: "width", cType: "text", default: "100%" },
-	{ label: "高", propName: "height", cType: "text", default: "auto" },
+    { label: "高", propName: "height", cType: "text", default: "auto" },
+    { label: "字体颜色", propName: "color", cType: "text" },
+    { label: "字体大小", propName: "fontSize", cType: "text" },
+    { label: "行高", propName: "lineHeight", cType: "text" },
     { label: "内边距", propName: "padding", cType: "text", default: "0" },
     { label: "外边距", propName: "margin", cType: "text", default: "0" },
     { label: "边框", propName: "border", cType: "text", default: "none" },
     { label: "圆角", propName: "borderRadius", cType: "text", default: "none" },
-    { label: "背景地址", propName: "backgroundImage", cType: "text" },
     { label: "背景颜色", propName: "backgroundColor", cType: "text" },
+    { label: "背景地址", propName: "backgroundImage", cType: "text" },
     {
         label: "重复",
         propName: "backgroundRepeat",
@@ -125,7 +128,15 @@ export const commonComponentStyle = () => [
         propName: "backgroundSize",
         cType: "select",
         options: ["100%", "contain", "cover"]
-    }
+    },
+    {
+        label: "定位",
+        propName: "position",
+        cType: "select",
+        options: ["static", "relative", "absolute", "fixed"]
+    },
+    { label: "左边", propName: "left", cType: "text" },
+    { label: "上边", propName: "top", cType: "text" }
 ];
 
 // 常量

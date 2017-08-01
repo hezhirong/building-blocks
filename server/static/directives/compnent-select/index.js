@@ -56,7 +56,7 @@ export default {
 			if (getComputedStyle(this).position === 'static') {
 				$this.addClass(relative)
 			}
-            $this.addClass(className);
+			$this.addClass(className);
 			PostMessage('changeComponent', {props, key, styles});
 			// return false;
 

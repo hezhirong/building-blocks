@@ -1,4 +1,5 @@
 import rc from '../components/renderComponent/index'
+import extend from '../directives/extend/index'
 
 // directive
 let dropable = {bind() {}}
@@ -11,7 +12,8 @@ const components = {
 const directives = {
     dropable,
     select,
-    container
+    container,
+    extend
 }
 const install = Vue => {
     Object.keys(components).forEach((key) => {
