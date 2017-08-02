@@ -1,6 +1,6 @@
 <template>
     <el-dialog title="打开项目" v-model="dialogVisible">
-        <el-table v-loading="isLoading" ref="projectTable" :data="projectData" highlight-current-row @current-change="handleCurrentChange" style="width: 100%">
+        <el-table v-loading="isLoading" ref="projectTable" :data="projectData" @row-dblclick="dbClick" highlight-current-row @current-change="handleCurrentChange" style="width: 100%">
             <el-table-column property="createTime" label="创建日期" width="150">
                 <template scope="scope">
                     {{ scope.row.createTime | date('date') }}
@@ -62,6 +62,10 @@ export default {
             if (this.currentRow !== null) {
                 this.isDisabled = false;
             }
+        },
+        dbClick(row, event) {
+            this.currentRow = row;
+            this.changeProject();
         },
         async removeProject(row) {
             if (this.projectIsOpen(row)) {

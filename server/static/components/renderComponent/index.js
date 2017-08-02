@@ -29,19 +29,6 @@ const buildOptions = (component, h, ctx) => {
     if (component.slots) {
         options.scopedSlots = buildSlots(component, h);
     }
-    if (component.name === 'button') {
-        options.nativeOn = {
-            click() {
-                let name = 'dialogRef'
-                let refs = ctx.parent.$refs;
-                if (refs && refs[name] && typeof refs[name].show === 'function') {
-                   refs[name].show();
-                }
-            }
-        }
-    } else if (component.name === 'view') {
-        options.ref = 'dialogRef'
-    }
     return options;
 };
 export default {

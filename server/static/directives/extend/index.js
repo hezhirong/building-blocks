@@ -1,4 +1,4 @@
-import {Event, loop} from "../../js/util"
+import {Event, loop, cssText2Obj} from "../../js/util"
 const convert = (str) => {
 	return str.replace(/\-(\w)/g, function(all, letter){
 		return letter.toUpperCase()
@@ -6,21 +6,12 @@ const convert = (str) => {
 }
 const async = (el, binding, vnode) => {
     let wrap = vnode.context.$el,
-        cssText = wrap && wrap.style.cssText || '',
-        styles = {};
-    cssText.split(';').forEach( 
-        item => {
-            let arr = item.split(':');
-            if (arr[0] && arr[1]) {
-                styles[convert(arr[0])] = arr.slice(1).join(":").trim()
-            }
-        } 
-    )
+        styleObj = cssText2Obj(wrap);
     if (Array.isArray(binding.value)) {
         let cssData = {}
         binding.value.forEach( item => {
-            if (styles[item]) {
-                cssData[item] = styles[item]
+            if (styleObj[item]) {
+                cssData[item] = styleObj[item]
             }
         })
         $(el).css(cssData)

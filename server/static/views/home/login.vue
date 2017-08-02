@@ -1,9 +1,10 @@
 <template>
     <div class="login-background">
         <el-form :model="userForm" :rules="rules" ref="userForm" label-position="left" label-width="0px" class="demo-ruleForm login-container">
-            <h3 class="title">积木系统
-                <span>v{{version}}</span>
-            </h3>
+            <h1>
+                <span class="title">积木系统</span>
+                <span class="version">v{{version}}</span>
+            </h1>
             <el-form-item prop="account">
                 <el-input type="text" v-model="userForm.account" auto-complete="off" placeholder="账号"></el-input>
             </el-form-item>
@@ -77,9 +78,7 @@ export default {
     height: 100%;
 }
 
-h3 span {
-    font-size: 12px;
-}
+
 
 .login-container {
     /*box-shadow: 0 0px 8px 0 rgba(0, 0, 0, 0.06), 0 1px 0px 0 rgba(0, 0, 0, 0.02);*/
@@ -94,11 +93,30 @@ h3 span {
     box-shadow: 0 0 25px #cac6c6;
     position: relative;
     top: 180px;
-    .title {
+    h1 {
         margin: 0px auto 30px auto;
         text-align: center;
-        color: #505458;
-        font-size: 30px;
+        .title {
+            font-size: 40px;
+            color: #f35626;
+            background-image: -webkit-linear-gradient(92deg,#f35626,#feab3a);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            -webkit-animation: hue 30s infinite linear;
+        }
+        .version {
+            font-size: 12px;
+            color: #505458;
+        }
+    }
+    @keyframes hue {
+        from {
+            -webkit-filter: hue-rotate(0deg);
+        }
+
+        to {
+            -webkit-filter: hue-rotate(-360deg);
+        }
     }
     .remember {
         margin: 0px 0px 35px 0px;

@@ -55,6 +55,12 @@ const _loop = (data, id, callback, name = "key") => {
         }
     });
 };
+const convert = (str) => {
+	return str.replace(/\-(\w)/g, function(all, letter){
+		return letter.toUpperCase()
+	}).trim();
+}
+
 export const Event = {
     emit: (key, value) => {
         _event.$emit(key, value);
@@ -145,4 +151,18 @@ export const ENUM = {
         PRODUCT: 'PRODUCT',
         TOKEN: 'TOKEN'
     }
+}
+// formatStyle
+export const cssText2Obj = el => {
+    let styles = {},
+		styleStr = el.style.cssText;
+	styleStr.split(';').forEach( 
+		item => {
+			let arr = item.split(':');
+			if (arr[0] && arr[1]) {
+				styles[convert(arr[0])] = arr.slice(1).join(":").trim()
+			}
+		} 
+	)
+	return styles;
 }

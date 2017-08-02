@@ -78,7 +78,7 @@ const util = {
 			import '${get("../scss/common.scss", "../../../static/scss/common.scss")}'
 			import plugins from '${pluginPath}'
 			import Vue from 'vue'
-
+			import 'animate.css'
 			Vue.use(plugins);
 			/* components */
 			${importComponent()}

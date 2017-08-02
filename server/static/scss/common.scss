@@ -21,7 +21,7 @@ body, html, #app {
 }
 .selected-component {
 	outline: .5rem dashed #3FADFF;
-	&:after {
+	&:not(.hide-tag):after {
 		content: "SELECTED";
 		position: absolute;
 		top: -1px;

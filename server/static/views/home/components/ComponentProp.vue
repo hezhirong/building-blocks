@@ -25,6 +25,15 @@ import Control from './Control.js'
 
 let timeout = 0;
 let postProps = [];
+let styleExtend = {
+    'backgroundImage': str => {
+        if (str.startWith('url(')) {
+            return str;
+        }
+        return `url(${str})`;
+    }
+}
+const KEY = "$$value";
 export default {
     data() {
         return {
@@ -73,6 +82,9 @@ export default {
             }, 500)
         },
         styleChange(control, value) {
+            if (styleExtend[control.propName]) {
+                control[KEY] = styleExtend[control.propName](control[KEY]);
+            }
             this.changeData.style[control.propName] = control
         },
         syncStyle() {
@@ -95,7 +107,7 @@ export default {
                     if (!item.label) {
                         item.label = key;
                     }
-                    item.$$value = typeof item['default'] === 'function' ? item['default'] : (item['default'] || '');
+                    item[KEY] = typeof item['default'] === 'function' ? item['default'] : (item['default'] || '');
                     propList.push(item)
                 })
                 this.customProps = {
@@ -107,10 +119,10 @@ export default {
             let styleList = [],
                 styleData = commonComponentStyle();
             styleData.forEach(item => {
-                item.$$value = item['default'] || '';
+                item[KEY] = item['default'] || '';
                 // 回写默认值
                 if (data.styles[item.propName]) {
-                    item.$$value = data.styles[item.propName]
+                    item[KEY] = data.styles[item.propName]
                 }
                 styleList.push(item)
             })

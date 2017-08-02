@@ -1,6 +1,8 @@
 const className = 'selected-component';
+const className2 = 'hide-tag';
 const relative = 'position-relative';
-import {PostMessage, Event} from '../../js/util'
+const tagWidth = 300;
+import {PostMessage, Event, cssText2Obj} from '../../js/util'
 
 let selectComponentKey = null;
 document.body.onkeydown = function (e) {
@@ -11,24 +13,7 @@ document.body.onkeydown = function (e) {
 	}
 	return false;
 }
-const convert = (str) => {
-	return str.replace(/\-(\w)/g, function(all, letter){
-		return letter.toUpperCase()
-	}).trim();
-}
-const getComputedStyle = el => {
-	let styles = {},
-		styleStr = el.style.cssText;
-	styleStr.split(';').forEach( 
-		item => {
-			let arr = item.split(':');
-			if (arr[0] && arr[1]) {
-				styles[convert(arr[0])] = arr.slice(1).join(":").trim()
-			}
-		} 
-	)
-	return styles;
-}
+
 export default {
     bind(el, binding, vnode) {
     	let $el = $(el),
@@ -39,7 +24,7 @@ export default {
 			console.log('***** selected vnode *****', vnode);
 
 			let $this = $(this),
-				styles = getComputedStyle(el)
+				styleObj = cssText2Obj(el)
 			
 			selectComponentKey = key;
 			if ($this.hasClass(className)) {
@@ -52,13 +37,20 @@ export default {
 				}
 			})
 			// 添加class和dom
-			$('.selected-component').removeClass(className + ' ' + relative);
-			if (getComputedStyle(this).position === 'static') {
+			$('.selected-component').removeClass(`${className} ${relative} ${className2}`);
+			let addClassName = [];
+			if (styleObj.position === 'static') {
+				addClassName.push(relative)
 				$this.addClass(relative)
 			}
-			$this.addClass(className);
-			PostMessage('changeComponent', {props, key, styles});
-			// return false;
+			if ($this.width() < tagWidth) {
+				addClassName.push(className, className2)
+			} else {
+				addClassName.push(className)
+			}
+			$this.addClass(addClassName.join(' '));
+			PostMessage('changeComponent', {props, key, styleObj});
+			e.stopPropagation();
 
         }).on('dblclick', function () {
 			if (confirm('是否要删除组件')) {

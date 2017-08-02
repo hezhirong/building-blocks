@@ -1,7 +1,7 @@
 <template>
 	<header>
 		<h1 class="sys-name">
-			积木系统
+			<span class="title">积木系统</span>
 		</h1>
 		<div class="header-nav">
 			<ul>
