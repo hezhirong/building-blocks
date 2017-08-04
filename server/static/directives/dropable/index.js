@@ -14,6 +14,7 @@ export default {
 			} catch(e) {
 				throw new Error('格式化数据失败');
 			}
+			console.log(formData)
 			if (binding.value instanceof Function) {
 				binding.value(formData)
 			}

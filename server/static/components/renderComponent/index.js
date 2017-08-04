@@ -8,15 +8,15 @@ const buildSlots = (component, h) => {
         temp[slotComponent.slotName].push(slotComponent);
     })
     Object.keys(temp).forEach(key => {
-        scopedSlots[key] = props => h('div', { style: { display: 'flex', width: '100%', height: '100%' } }, temp[key].map( component => {
+        scopedSlots[key] = props => h('template', { style: { display: 'flex', width: '100%', height: '100%' } }, temp[key].map( component => {
             return h(component.tag, buildOptions(component, h))
         }))
     })
     return scopedSlots;
 }
 const buildOptions = (component, h, ctx) => {
+
     let options = {
-        props: {...component.props},
         style: {...component.style},
         attrs: { key: component.key },
         directives: [
@@ -25,6 +25,9 @@ const buildOptions = (component, h, ctx) => {
             }
         ]
     }
+    if (Object.keys(component.props).length > 0) {
+        options.props = {...component.props}
+    } 
     // 解析solt 子组件
     if (component.slots) {
         options.scopedSlots = buildSlots(component, h);
@@ -36,7 +39,8 @@ export default {
     render: function (h, ctx) {
         let props = ctx.props;
         if (props.source && props.source.length > 0) {
-        	console.log('***** render *****', props.source)
+            console.log('***** render *****', props.source)
+            
             return h('div', { attrs: {id: 'rootComponent'} }, props.source.map(component => {
                 return h(component.tag,
                     buildOptions(component, h, ctx),

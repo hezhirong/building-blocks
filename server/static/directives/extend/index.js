@@ -14,7 +14,8 @@ const async = (el, binding, vnode) => {
                 cssData[item] = styleObj[item]
             }
         })
-        $(el).css(cssData)
+        let curStyleObj = cssText2Obj(el)
+        $(el).css({ ...curStyleObj, ...cssData});
     }
 }
 export default {

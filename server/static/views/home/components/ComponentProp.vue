@@ -14,7 +14,9 @@
                 <el-form-item v-for="(item, index) in customStyle.list" :key="index" :label="item.label">
                      <control :data="item" @change="styleChange"></control> 
                 </el-form-item>
-                <el-button v-if="customStyle.list.length > 0" type="primary" style="float: right" size="small" @click="syncStyle">同步</el-button>
+                <div class="style-btn-wrap">
+                    <el-button v-if="customStyle.list.length > 0" type="primary" size="small" @click="syncStyle">同步</el-button>
+                </div>
             </el-form>
         </el-tab-pane> 
     </el-tabs>
@@ -117,12 +119,13 @@ export default {
         },
         initStyles(data) {
             let styleList = [],
-                styleData = commonComponentStyle();
+                styleData = commonComponentStyle(),
+                _key = 'styleObj';
             styleData.forEach(item => {
                 item[KEY] = item['default'] || '';
                 // 回写默认值
-                if (data.styles[item.propName]) {
-                    item[KEY] = data.styles[item.propName]
+                if (data[_key][item.propName]) {
+                    item[KEY] = data[_key][item.propName]
                 }
                 styleList.push(item)
             })
@@ -160,5 +163,22 @@ export default {
 <style>
 .el-table_1_column_2 .cell {
     padding: 0;
+}
+#styles {
+    position: relative;
+    margin-bottom: 45px;
+}
+.style-btn-wrap {
+    position: fixed;
+    width: 400px;
+    bottom: 20px;
+    right: 0;
+    background: aliceblue;
+    text-align: right;
+    margin-bottom: -20px;
+    padding: 5px 0;
+}
+.style-btn-wrap button {
+    margin-right: 20px;        
 }
 </style>
