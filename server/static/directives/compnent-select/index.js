@@ -17,9 +17,11 @@ document.body.onkeydown = function (e) {
 export default {
     bind(el, binding, vnode) {
     	let $el = $(el),
-			props = {...vnode.componentOptions.Ctor.options.props} || {},
+			props = vnode.componentOptions.Ctor.options.props || {},
 			instance = vnode.componentInstance,
 			key = vnode.data.attrs.key;
+		
+		props = JSON.parse(JSON.stringify(props))
 		$el.on('click', function (e) {
 			console.log('***** selected vnode *****', vnode);
 
@@ -30,12 +32,10 @@ export default {
 			if ($this.hasClass(className)) {
 				return false;
 			}
-			console.log(instance[key])
 			// 设定默认值
 			Object.keys(props).forEach( key => {
-				console.log(props)
-				if (props[key]) {
-					// props[key]['default'] = instance[key];
+				if (props[key] && instance[key]) {
+					props[key]['default'] = instance[key];
 				}
 			})
 			// 添加class和dom
@@ -50,8 +50,8 @@ export default {
 				addClassName.push(className)
 			}
 			$this.addClass(addClassName.join(' '));
-			// PostMessage('changeComponent', {props, key, styleObj});
-			// e.stopPropagation();
+			PostMessage('changeComponent', {props, key, styleObj});
+			e.stopPropagation();
         }).on('dblclick', function () {
 			if (confirm('是否要删除组件')) {
 				Event.emit('removeComponent', key)
