@@ -18,6 +18,7 @@ export default {
     bind(el, binding, vnode) {
     	let $el = $(el),
 			props = vnode.componentOptions.Ctor.options.props || {},
+			tag = vnode.componentOptions.tag,
 			instance = vnode.componentInstance,
 			key = vnode.data.attrs.key;
 		
@@ -44,13 +45,14 @@ export default {
 			if (styleObj.position === 'static') {
 				addClassName.push(relative)
 			}
+			// 组件太小 是否需要隐藏tag
 			if ($this.width() < tagWidth) {
 				addClassName.push(className, className2)
 			} else {
 				addClassName.push(className)
 			}
 			$this.addClass(addClassName.join(' '));
-			PostMessage('changeComponent', {props, key, styleObj});
+			PostMessage('changeComponent', {props, key, styleObj, ref: `${tag}-${key}`});
 			e.stopPropagation();
         }).on('dblclick', function () {
 			if (confirm('是否要删除组件')) {

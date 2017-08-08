@@ -15,7 +15,6 @@ const buildSlots = (component, h) => {
     return scopedSlots;
 }
 const buildOptions = (component, h, ctx) => {
-
     let options = {
         style: {...component.style},
         attrs: { key: component.key },
@@ -23,7 +22,8 @@ const buildOptions = (component, h, ctx) => {
             {
                 name: 'select',
             }
-        ]
+        ],
+        ref: component.ref || `${component.tag}-${component.key}`
     }
     if (Object.keys(component.props).length > 0) {
         options.props = {...component.props}

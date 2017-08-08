@@ -2,6 +2,9 @@
     <el-tabs v-model="activeName">
         <el-tab-pane label="属性设置" name="prop" style="padding:0 20px">
             <el-form id="props" :model="customProps" ref="propForm" label-width="80px">
+                <el-form-item label="name" v-if="componentKey">
+                    <el-input :disabled="true" v-model="componentRef" @change="refChange"></el-input>
+                </el-form-item>
                 <el-form-item v-for="(item, index) in customProps.list" :key="index" :label="item.label" :prop="'list.' + index + '.$$value'" :rules="[
                             { validator: validateControl(item), trigger: 'blur,change' }
                         ]">
@@ -25,6 +28,20 @@
 import { PostMessage, commonComponentStyle } from '../../../js/util.js'
 import Control from './Control.js'
 
+const buildEmptyData = () => {
+    return {
+        list: []
+    }
+}
+const timeout = (fn) => {
+    let out = 0
+    return () => {
+        clearTimeout(out);
+        out = setTimeout(() => {
+            fn()
+        }, 500)
+    }
+}
 let timeout = 0;
 let postProps = [];
 let styleExtend = {
@@ -39,13 +56,10 @@ const KEY = "$$value";
 export default {
     data() {
         return {
-            customStyle: {
-                list: []
-            },
-            customProps: {
-                list: []
-            },
-            componentKey: null,
+            customStyle: buildEmptyData(),
+            customProps: buildEmptyData(),
+            componentKey: '',
+            componentRef: '',
             changeData: {
                 prop: {},
                 style: {}
@@ -53,7 +67,20 @@ export default {
             activeName: 'prop'
         }
     },
+    computed: {
+        componentName() {
+            return this.componentTag + '-' + this.componentKey;
+        }
+    },
     methods: {
+        refChange() {
+            timeout(() => {
+                PostMessage('changeRef', {
+                    key: this.componentKey,
+                    ref: this.componentRef
+                }, true);
+            })()
+        },
         validateControl(control) {
             return (rule, value, callback) => {
                 if (typeof control.validate === 'function') {
@@ -69,8 +96,7 @@ export default {
             };
         },
         valueChange(control, value) {
-            clearTimeout(timeout);
-            timeout = setTimeout(() => {
+            timeout(() => {
                 this.$refs.propForm.validate(valid => {
                     postProps.push(control)
                     if (valid) {
@@ -81,14 +107,16 @@ export default {
                         postProps = [];
                     }
                 })
-            }, 500)
+            })();
         },
+        // 改动单个输入框
         styleChange(control, value) {
             if (styleExtend[control.propName]) {
                 control[KEY] = styleExtend[control.propName](control[KEY]);
             }
             this.changeData.style[control.propName] = control
         },
+        // 同步按钮
         syncStyle() {
             let changeKeys = Object.keys(this.changeData.style);
             if (changeKeys.length === 0) {
@@ -139,20 +167,19 @@ export default {
             if (!data.key) {
                 return;
             }
-            this.initProps(data)
+            this.initProps(data);
             this.initStyles(data);
             // 清除缓存数据
             Object.keys(this.changeData).forEach( key =>  this.changeData[key] = {} );
             // 缓存key
             this.componentKey = data.key;
+            this.componentRef = data.ref;
         })
         this.event.on('clearComponentProps', () => {
-            this.customProps = {
-                list: []
-            }
-            this.customStyle = {
-                list: []
-            }
+            this.customProps = buildEmptyData();
+            this.customStyle = buildEmptyData();
+            this.componentKey = '';
+            this.componentRef = '';
         })
     },
     components: {

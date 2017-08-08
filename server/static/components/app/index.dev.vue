@@ -25,15 +25,46 @@
 		methods: {
             // 拖拽组件
 			dropChange(data) {
+                console.log(data)
 			    $$key += 1;
 				data.key = $$key;
 				data.props = {};
                 data.children = [];
+                data.ref = `${data.tag}-${$$key}`;
 				this.componentData.push(data);
 				this.updateComponent();
 			},
             updateComponent() {
                 PostMessage('updateComponent', {components: this.componentData, id: this.projectData.id});
+            },
+            /* 回调方法 */
+            changeStyles(data) {
+                loop(this.componentData, data.key, item => {
+                    data.styles.forEach( prop => {
+                        if (!item.style) {
+                            this.$set(item, 'style', {});
+                        }
+                        item.style[prop.propName] = prop['$$value'];
+                    })
+                })
+                this.componentData = this.componentData.slice(0);
+            },
+            changeProps(data) {
+                // 递归遍历找出节点 修改props
+                loop(this.componentData, data.key, item => {
+                    data.props.forEach( prop => {
+                        item.props[prop.propName] = prop['$$value'];
+                    })
+                })
+
+                this.componentData = this.componentData.slice(0);
+            },
+            changeRef(data) {
+                loop(this.componentData, data.key, item => {
+                    item.ref = data.ref;
+                })
+                console.log(JSON.parse(JSON.stringify(this.componentData)))
+                // this.componentData = this.componentData.slice(0);
             }
 		},
 		mounted() {
@@ -68,28 +99,11 @@
                 try {
                     let data = JSON.parse(e.data);
                     console.log('***** post iframe message *****', data)
-                    if (data.type === 'changeProps') {
-                        // 递归遍历找出节点 修改props
-                        loop(this.componentData, data.key, item => {
-                            data.props.forEach( prop => {
-                                item.props[prop.propName] = prop['$$value'];
-                            })
-                        })
-
-                        this.componentData = this.componentData.slice(0);
-                        this.updateComponent();
-                    } else if (data.type === 'changeStyles') {
-                        loop(this.componentData, data.key, item => {
-                            data.styles.forEach( prop => {
-                                if (!item.style) {
-                                    this.$set(item, 'style', {});
-                                }
-                                item.style[prop.propName] = prop['$$value'];
-                            })
-                        })
-                        this.componentData = this.componentData.slice(0);
-                        this.updateComponent();
+                    if (typeof this[data.type] === 'function') {
+                        this[data.type](data)
                     }
+                    // 保存
+                    this.updateComponent();
                 } catch(e) {
                     console.log(e)
                 }
