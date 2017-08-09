@@ -42,7 +42,6 @@ const timeout = (fn) => {
         }, 500)
     }
 }
-let timeout = 0;
 let postProps = [];
 let styleExtend = {
     'backgroundImage': str => {
@@ -132,12 +131,18 @@ export default {
             if (data.props) {
                 let propList = [];
                 Object.keys(data.props).forEach(key => {
-                    let item = data.props[key];
+                    let item = data.props[key],
+                        model = {};
                     item.propName = key;
                     if (!item.label) {
                         item.label = key;
                     }
-                    item[KEY] = typeof item['default'] === 'function' ? item['default'] : (item['default'] || '');
+                    item[KEY] = typeof item['default'] === 'function' ? item['default']() : (item['default'] || '');
+                    // 补充默认的key
+                    if (item.model) {
+                        Object.keys(item.model).forEach( key => model[key] = item.model[key]['default'] || '' )
+                        item[KEY] = {...model, ...item[KEY]};
+                    }
                     propList.push(item)
                 })
                 this.customProps = {

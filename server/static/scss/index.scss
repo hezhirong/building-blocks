@@ -41,3 +41,11 @@ html, body, #app {
 .ivu-collapse>.ivu-collapse-item>.ivu-collapse-header {
 	padding-left: 20px;
 }
+.prop-config {
+	.el-tab-pane {
+		padding: 0 10px;
+	}
+	.el-form-item__content {
+		overflow: auto
+	}
+}

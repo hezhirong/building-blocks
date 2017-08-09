@@ -1,11 +1,13 @@
-const buildVNode = (value, vnode1, vnode2) => {
-    if (value) {
-        return vnode1;
-    } else {
-        return vnode2;
-    }
-};
-const controlRender = {
+const 
+    vName = "$$value",
+    buildVNode = (value, vnode1, vnode2) => {
+        if (value) {
+            return vnode1;
+        } else {
+            return vnode2;
+        }
+    },
+    controlRender = {
         text: (h, data, listeners) => {
             let child = [];
             if (data.append) {
@@ -30,6 +32,7 @@ const controlRender = {
         },
         select: (h, data, listeners) => {
             let options = Array.isArray(data.options) ? data.options : [];
+            // console.log(data)
             return h(
                 "el-select",
                 {
@@ -39,6 +42,7 @@ const controlRender = {
                     },
                     on: {
                         input: function(event) {
+                            console.log(data)
                             data[vName] = event;
                             listeners.change(data);
                         }
@@ -186,10 +190,11 @@ const controlRender = {
             ]);
         },
         object: (h, data, listeners) => {
-            let renderRowData = [];
-            let modelKeys = Object.keys(data.model),
+            let renderRowData = [],
+                modelKeys = Object.keys(data.model),
                 len = modelKeys.length;
             data[vName] = data[vName] || {};
+
             renderRowData = modelKeys.map(key => {
                 let item = {
                     ...data.model[key],
@@ -248,8 +253,7 @@ const controlRender = {
             type = "text";
         }
         return type;
-    },
-    vName = "$$value";
+    };
 
 export default {
     functional: true,

@@ -2,7 +2,7 @@
 	<div class="w100p h100p wrapper">
 		<img src="http://localhost:8181/img/phone.png" class="phone-img" :style="phoneStyle"/>
 		<div class="content" :style="contentStyle" v-show="previewData">
-			<iframe :src="previewUrl" border="0"></iframe>
+			<iframe ref="frame" :src="previewUrl" border="0"></iframe>
 		</div>
 	</div>
 </template>
@@ -70,6 +70,10 @@
         	}
 		},
 		mounted() {
+			this.event.on('refreshFrame', () => {
+				this.$refs.frame.src = this.$refs.frame.src;
+				this.event.emit('clearComponentProps')
+			})
 			this.event.on('selectProject', project => {
 				this.previewData = project;
 			})

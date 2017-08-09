@@ -25,7 +25,7 @@ const createZipFile = (projectDir, zipDir, projectName) => {
         webpack(config, e => {
             zipFolder(projectDir, zipDir, function(err) {
                 if (err) {
-                    reject("oh no!", err);
+                    reject(err);
                 } else {
                     resolve({ path: zipDir, projectName: projectName });
                 }

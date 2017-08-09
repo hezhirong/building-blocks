@@ -5,11 +5,14 @@
 		</h1>
 		<div class="header-nav">
 			<ul>
+				<li @click="openProjectList">
+					<div>打开项目</div>
+				</li>
 				<li @click="createProject">
 					<div>新建项目</div>
 				</li>
-				<li @click="openProjectList">
-					<div>打开项目</div>
+				<li @click="refreshFrame">
+					刷新
 				</li>
 				<li v-if="projectId">
 					<span v-download="exportUrl">导出</span>
@@ -68,7 +71,7 @@
 </style>
 <script>
 import ProjectList from './ProductList.vue'
-import {Event, sStorage, ENUM} from '../../../js/util'
+import {sStorage, ENUM} from '../../../js/util'
 export default {
 	data() {
 		let project = sStorage.get(ENUM.ss.PRODUCT, true);
@@ -108,6 +111,9 @@ export default {
 				this.$emit('change', 'createProject', this.projectForm)
 				this.createProjectFormShow = false;
 			})
+		},
+		refreshFrame() {
+			this.event.emit('refreshFrame')
 		},
 		openProjectList() {
 			this.projectListShow = true;
