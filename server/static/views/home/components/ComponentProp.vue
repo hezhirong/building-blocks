@@ -6,22 +6,22 @@
                     <el-input :disabled="true" v-model="componentRef" @change="refChange"></el-input>
                 </el-form-item>
                 <el-form-item v-for="(item, index) in customProps.list" :key="index" :label="item.label" :prop="'list.' + index + '.$$value'" :rules="[
-                            { validator: validateControl(item), trigger: 'blur,change' }
-                        ]">
+                                { validator: validateControl(item), trigger: 'blur,change' }
+                            ]">
                     <control :data="item" @change="valueChange"></control>
                 </el-form-item>
             </el-form>
         </el-tab-pane>
-         <el-tab-pane label="通用样式" name="style" style="padding:0 20px">
+        <el-tab-pane label="通用样式" name="style" style="padding:0 20px">
             <el-form id="styles" :model="customStyle" ref="stylesForm" label-width="80px">
                 <el-form-item v-for="(item, index) in customStyle.list" :key="index" :label="item.label">
-                     <control :data="item" @change="styleChange"></control> 
+                    <control :data="item" @change="styleChange"></control>
                 </el-form-item>
                 <div class="style-btn-wrap">
                     <el-button v-if="customStyle.list.length > 0" type="primary" size="small" @click="syncStyle">同步</el-button>
                 </div>
             </el-form>
-        </el-tab-pane> 
+        </el-tab-pane>
     </el-tabs>
 </template>
 <script>
@@ -32,8 +32,7 @@ const buildEmptyData = () => {
     return {
         list: []
     }
-}
-const timeout = (fn) => {
+}, timeout = (fn) => {
     let out = 0
     return () => {
         clearTimeout(out);
@@ -41,17 +40,17 @@ const timeout = (fn) => {
             fn()
         }, 500)
     }
-}
-let postProps = [];
-let styleExtend = {
-    'backgroundImage': str => {
-        if (str.startWith('url(')) {
-            return str;
+},
+    styleExtend = {
+        'backgroundImage': str => {
+            if (str.startWith('url(')) {
+                return str;
+            }
+            return `url(${str})`;
         }
-        return `url(${str})`;
-    }
-}
-const KEY = "$$value";
+    },
+    KEY = "$$value";
+let postProps = [];
 export default {
     data() {
         return {
@@ -121,8 +120,8 @@ export default {
             if (changeKeys.length === 0) {
                 return false;
             }
-            let data = {key: this.componentKey, styles: []};
-            changeKeys.forEach( key => {
+            let data = { key: this.componentKey, styles: [] };
+            changeKeys.forEach(key => {
                 data.styles.push(this.changeData.style[key]);
             })
             PostMessage('changeStyles', data, true);
@@ -140,8 +139,8 @@ export default {
                     item[KEY] = typeof item['default'] === 'function' ? item['default']() : (item['default'] || '');
                     // 补充默认的key
                     if (item.model) {
-                        Object.keys(item.model).forEach( key => model[key] = item.model[key]['default'] || '' )
-                        item[KEY] = {...model, ...item[KEY]};
+                        Object.keys(item.model).forEach(key => model[key] = item.model[key]['default'] || '')
+                        item[KEY] = { ...model, ...item[KEY] };
                     }
                     propList.push(item)
                 })
@@ -175,7 +174,7 @@ export default {
             this.initProps(data);
             this.initStyles(data);
             // 清除缓存数据
-            Object.keys(this.changeData).forEach( key =>  this.changeData[key] = {} );
+            Object.keys(this.changeData).forEach(key => this.changeData[key] = {});
             // 缓存key
             this.componentKey = data.key;
             this.componentRef = data.ref;
@@ -196,10 +195,12 @@ export default {
 .el-table_1_column_2 .cell {
     padding: 0;
 }
+
 #styles {
     position: relative;
     margin-bottom: 45px;
 }
+
 .style-btn-wrap {
     position: fixed;
     width: 400px;
@@ -210,7 +211,8 @@ export default {
     margin-bottom: -20px;
     padding: 5px 0;
 }
+
 .style-btn-wrap button {
-    margin-right: 20px;        
+    margin-right: 20px;
 }
 </style>

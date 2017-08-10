@@ -50,6 +50,16 @@ function socketWrap(socket) {
                 })
             })
     });
+    socket.on('repeatLogin', () => {
+        MessageBox({
+            type: 'warning',
+            title: '提示',
+            message: '此账号在其他地方登录！！！',
+            callback: () => {
+                location.href="/";
+            }
+        })
+    })
     return socket;
 }
 

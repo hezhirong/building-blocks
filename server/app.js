@@ -18,7 +18,7 @@ const io = require('socket.io')(server);
 const socketioJwt = require("socketio-jwt");
 
 const secret = 'building-blocks secret 22222222'
-
+const loginedUserCache = {}
 mongoose.Promise = Promise;
 mongoose.connect('mongodb://localhost/building-blocks');
 
@@ -124,6 +124,8 @@ io.on('connection', socketioJwt.authorize({
     timeout: 15000 // 15 seconds to send the authentication message
 })).on('connection', socket => {
     socket.on('login', (data, cb) => {
+        // { username: '123', password: '123' }
+        // TODO: 调用接口验证登录
         let userData = {
             id: 1,
             name: 'hezhirong'
@@ -137,15 +139,22 @@ io.on('connection', socketioJwt.authorize({
         })
     })
 }).on('authenticated', function (socket) {
-    console.log('hello! ' + socket.decoded_token.name);
+    let userData = socket.decoded_token;
+    console.log('hello! ' + userData.name);
     socket.emit('componentList', componentsData);
 
+    const loginUser = loginedUserCache[userData.id];
+    if (typeof loginUser === 'object' && loginUser.socket) {
+        loginUser.socket.emit('repeatLogin')
+    }
+    loginedUserCache[userData.id] = Object.assign({}, userData, {socket: socket});
+    
     socket.on('message', (data = {}, cb) => {
         if (!data.data) {
             data.data = {}
         }
         // 最近用户数据
-        data.data.userData = socket.decoded_token;
+        data.data.userData = userData;
         apiModel.handle(io, socket, data, cb);
     });
     socket.on('disconnect', () => {
