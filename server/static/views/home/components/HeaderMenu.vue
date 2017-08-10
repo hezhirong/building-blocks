@@ -17,6 +17,9 @@
 				<li v-if="projectId">
 					<span v-download="exportUrl">导出</span>
 				</li>
+				<li class="right">
+					<router-link :to="{path: '/login'}">退出</router-link>
+				</li>
 			</ul>
 		</div>
 		<el-dialog size="tiny" title="创建项目" v-model="createProjectFormShow">

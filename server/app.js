@@ -159,11 +159,11 @@ io.on('connection', socketioJwt.authorize({
     });
     socket.on('disconnect', () => {
         // console.log('some one disconnect');
-        apiModel.handle(io, socket, {
-            method: 'DELETE',
-            path: '/auth',
-            data: {}
-        }, () => {});
+        // apiModel.handle(io, socket, {
+        //     method: 'DELETE',
+        //     path: '/auth',
+        //     data: {}
+        // }, () => {});
     });
 })
 
