@@ -32,13 +32,13 @@ const buildEmptyData = () => {
     return {
         list: []
     }
-}, timeout = (fn) => {
+}, timeout = () => {
     let out = 0
-    return () => {
+    return (fn, t = 500) => {
         clearTimeout(out);
         out = setTimeout(() => {
             fn()
-        }, 500)
+        }, t)
     }
 },
     styleExtend = {
@@ -49,7 +49,9 @@ const buildEmptyData = () => {
             return `url(${str})`;
         }
     },
-    KEY = "$$value";
+    KEY = "$$value",
+    timeoutValueChange = timeout(),
+    timeoutRefChange = timeout();
 let postProps = [];
 export default {
     data() {
@@ -72,12 +74,12 @@ export default {
     },
     methods: {
         refChange() {
-            timeout(() => {
+            timeoutRefChange(() => {
                 PostMessage('changeRef', {
                     key: this.componentKey,
                     ref: this.componentRef
                 }, true);
-            })()
+            })
         },
         validateControl(control) {
             return (rule, value, callback) => {
@@ -94,7 +96,7 @@ export default {
             };
         },
         valueChange(control, value) {
-            timeout(() => {
+            timeoutValueChange(() => {
                 this.$refs.propForm.validate(valid => {
                     postProps.push(control)
                     if (valid) {
@@ -105,7 +107,7 @@ export default {
                         postProps = [];
                     }
                 })
-            })();
+            })
         },
         // 改动单个输入框
         styleChange(control, value) {

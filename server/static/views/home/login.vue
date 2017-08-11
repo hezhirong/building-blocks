@@ -52,6 +52,7 @@ export default {
                     this.socket.emit('login', loginParams, res => {
                         if (res.status === 200) {
                             sStorage.set(ENUM.ss.TOKEN, res.data)
+                            this.socket.token = res.data.token;
                             this.$router.push('/index');
                         } else {
                             this.$message.error(res.msg);

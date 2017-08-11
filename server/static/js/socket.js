@@ -1,4 +1,5 @@
 import config from '../../../config/project';
+import {sStorage, ENUM} from './util'
 import {
     Message,
     MessageBox
@@ -6,7 +7,7 @@ import {
 let io = require('socket.io-client');
 
 function createInterface(method) {
-    return function (path, data ) {
+    return function (path, data = {} ) {
         if (typeof this.token === 'string' && this.token !== '') {
             data.token = this.token;
         }
@@ -34,32 +35,34 @@ function socketWrap(socket) {
     socket.put = createInterface('PUT');
     socket.delete = createInterface('DELETE');
 
-    socket.on('connect', function () {
-        socket
-            .on('authenticated', function () {
-                //do other things
-            })
-            .on('unauthorized', function (msg) {
-                MessageBox({
-                    type: 'warning',
-                    title: '提示',
-                    message: '登录验证失败',
-                    callback: () => {
-                        location.href="/";
-                    }
-                })
-            })
-    });
-    socket.on('repeatLogin', () => {
-        MessageBox({
-            type: 'warning',
-            title: '提示',
-            message: '此账号在其他地方登录！！！',
-            callback: () => {
-                location.href="/";
-            }
+    socket
+        .on('connect', function () {
+            
         })
-    })
+        .on('authenticated', function (d) {
+            let data = sStorage.get(ENUM.ss.TOKEN, true)
+            socket.token = data.token;
+        })
+        .on('unauthorized', function (msg) {
+            MessageBox({
+                type: 'warning',
+                title: '提示',
+                message: '登录验证失败',
+                callback: () => {
+                    location.href="/";
+                }
+            })
+        })
+        .on('repeatLogin', () => {
+            MessageBox({
+                type: 'warning',
+                title: '提示',
+                message: '此账号在其他地方登录！！！',
+                callback: () => {
+                    location.href="/";
+                }
+            })
+      })
     return socket;
 }
 

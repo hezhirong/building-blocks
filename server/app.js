@@ -119,53 +119,62 @@ app.use(async(ctx, next) => {
 // 读取组件信息
 var componentsData = require('./read-component.js')()
 // socket handle
-io.on('connection', socketioJwt.authorize({
-    secret: secret,
-    timeout: 15000 // 15 seconds to send the authentication message
-})).on('connection', socket => {
-    socket.on('login', (data, cb) => {
-        // { username: '123', password: '123' }
-        // TODO: 调用接口验证登录
-        let userData = {
-            id: 1,
-            name: 'hezhirong'
-        }
-        const token = jwt.sign(userData, secret);
-        cb({
-            status: 200,
-            data: Object.assign(userData, {
-                token: token
+io
+    .on('connection', socketioJwt.authorize({
+        secret: secret,
+        timeout: 15000 // 15 seconds to send the authentication message
+    })).on('connection', socket => {
+        socket.on('login', (data, cb) => {
+            // { username: '123', password: '123' }
+            // TODO: 调用接口验证登录
+            let userData = {
+                id: 1,
+                name: 'hezhirong'
+            }
+            const token = jwt.sign(userData, secret);
+            cb({
+                status: 200,
+                data: Object.assign(userData, {
+                    token: token
+                })
             })
         })
-    })
-}).on('authenticated', function (socket) {
-    let userData = socket.decoded_token;
-    console.log('hello! ' + userData.name);
-    socket.emit('componentList', componentsData);
-
-    const loginUser = loginedUserCache[userData.id];
-    if (typeof loginUser === 'object' && loginUser.socket) {
-        loginUser.socket.emit('repeatLogin')
-    }
-    loginedUserCache[userData.id] = Object.assign({}, userData, {socket: socket});
-    
-    socket.on('message', (data = {}, cb) => {
-        if (!data.data) {
-            data.data = {}
+    }).on('authenticated', function (socket) {
+        let userData = socket.decoded_token;
+        console.log('hello! ' + userData.name);
+        socket.emit('componentList', componentsData);
+        // 验证用户是否重复登录，踢下前一个用户
+        const loginUser = loginedUserCache[userData.id];
+        if (typeof loginUser === 'object' && loginUser.socket) {
+            loginUser.socket.emit('repeatLogin')
         }
-        // 最近用户数据
-        data.data.userData = userData;
-        apiModel.handle(io, socket, data, cb);
-    });
-    socket.on('disconnect', () => {
-        // console.log('some one disconnect');
-        // apiModel.handle(io, socket, {
-        //     method: 'DELETE',
-        //     path: '/auth',
-        //     data: {}
-        // }, () => {});
-    });
-})
+        loginedUserCache[userData.id] = Object.assign({}, userData, {socket: socket});
+        
+        socket.on('message', (data = {}, cb) => {
+            // 每次请求需要验证登录
+            if (!data.data) {
+                data.data = {}
+            }
+            // 验证登录状态
+            jwt.verify(data.data.token, secret, function(err, decoded) {
+                if (err) {
+                    socket.emit('unauthorized');
+                    return false;
+                }
+                // 最近用户数据
+                data.data.userData = userData;
+                apiModel.handle(io, socket, data, cb);
+            });
+        });
+        socket.on('disconnect', () => {
+            // console.log('some one disconnect');
+            // apiModel.handle(io, socket, {
+            //     method: 'DELETE',
+            //     path: '/auth',
+            //     data: {}
+            // }, () => {});
+        });
+    })
 
 // start listener
 server.listen(env === 'production' ? config.port : config.devPort, () => {

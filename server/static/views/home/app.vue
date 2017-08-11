@@ -50,6 +50,8 @@
 			let userData = sStorage.get(ENUM.ss.TOKEN,true);
 			this.socket.emit('authenticate', {
 				token: userData && userData.token 
+			}, (d) => {
+				console.log(d)
 			})
             Event.on('updateComponent', (data) => {
                 this.socket.post('/updateComponent', data)
