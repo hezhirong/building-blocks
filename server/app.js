@@ -86,14 +86,17 @@ router.get('/export/:docId', async(ctx, next) => {
     if (token) {
         try {
             let decoded = jwt.verify(token, secret);
-            let {path, projectName} = await require('./export.js')(decoded, ctx.params.docId)
+            let {
+                path,
+                projectName
+            } = await require('./export.js')(decoded, ctx.params.docId)
             ctx.set('Content-disposition', `attachment; filename=${projectName}.zip`);
             ctx.response.name = ''
             ctx.body = fs.createReadStream(path);
-        } catch(e) {
+        } catch (e) {
             ctx.status = 500;
             ctx.body = 'download faild';
-        } 
+        }
 
     } else {
         ctx.status = 500;
@@ -123,7 +126,8 @@ io
     .on('connection', socketioJwt.authorize({
         secret: secret,
         timeout: 15000 // 15 seconds to send the authentication message
-    })).on('connection', socket => {
+    }))
+    .on('connection', socket => {
         socket.on('login', (data, cb) => {
             // { username: '123', password: '123' }
             // TODO: 调用接口验证登录
@@ -139,7 +143,8 @@ io
                 })
             })
         })
-    }).on('authenticated', function (socket) {
+    })
+    .on('authenticated', function (socket) {
         let userData = socket.decoded_token;
         console.log('hello! ' + userData.name);
         socket.emit('componentList', componentsData);
@@ -148,15 +153,17 @@ io
         if (typeof loginUser === 'object' && loginUser.socket) {
             loginUser.socket.emit('repeatLogin')
         }
-        loginedUserCache[userData.id] = Object.assign({}, userData, {socket: socket});
-        
+        loginedUserCache[userData.id] = Object.assign({}, userData, {
+            socket: socket
+        });
+
         socket.on('message', (data = {}, cb) => {
             // 每次请求需要验证登录
             if (!data.data) {
                 data.data = {}
             }
             // 验证登录状态
-            jwt.verify(data.data.token, secret, function(err, decoded) {
+            jwt.verify(data.data.token, secret, function (err, decoded) {
                 if (err) {
                     socket.emit('unauthorized');
                     return false;
