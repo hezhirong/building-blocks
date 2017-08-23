@@ -43,7 +43,8 @@ const buildEmptyData = () => {
 },
     styleExtend = {
         'backgroundImage': str => {
-            if (str.startWith('url(')) {
+            str = str + '';
+            if (str.indexOf('url(') === 0) {
                 return str;
             }
             return `url(${str})`;

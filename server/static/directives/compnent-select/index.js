@@ -35,7 +35,7 @@ export default {
 			}
 			// 设定默认值
 			Object.keys(props).forEach( key => {
-				if (props[key] && instance[key]) {
+				if (props[key] && (instance[key] || instance[key] === '')) {
 					props[key]['default'] = instance[key];
 				}
 			})

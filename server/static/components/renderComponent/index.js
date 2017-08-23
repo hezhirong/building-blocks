@@ -25,7 +25,7 @@ const buildOptions = (component, h, ctx) => {
         ],
         ref: component.ref || `${component.tag}-${component.key}`
     }
-    if (Object.keys(component.props).length > 0) {
+    if (typeof component.props === 'object' && Object.keys(component.props).length > 0) {
         options.props = {...component.props}
     } 
     // 解析solt 子组件
